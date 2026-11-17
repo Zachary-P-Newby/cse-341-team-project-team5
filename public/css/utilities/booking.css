@@ -565,3 +565,20 @@ article.booking-page {
         }
     }
 }
+
+
+.ticket-card.unavailable {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.ticket-card.unavailable input {
+    cursor: not-allowed;
+}
+
+.unavailable-message {
+    color: #b42318;
+    font-weight: 600;
+    margin-top: 0.75rem;
+}

@@ -14,46 +14,62 @@
         <section class="ticket-selection">
             <h2 class="section-title">Select Your Ticket</h2>
             
-            <div class="ticket-options">
-                <% if (ticketOptions) { %>
-                    <% ticketOptions.forEach((ticket, index) => { %>
-                        <label class="ticket-card" for="ticket-<%= ticket.class %>">
-                            <input 
-                                type="radio" 
-                                name="ticketClass" 
-                                id="ticket-<%= ticket.class %>" 
-                                value="<%= ticket.class %>"
-                                data-name="<%= ticket.name %>"
-                                data-price="<%= ticket.price %>"
-                                <%= index === 1 ? 'checked' : '' %>
-                                required
-                            >
-                            <div class="ticket-content">
-                                <div class="ticket-header">
-                                    <h3 class="ticket-name"><%= ticket.name %></h3>
-                                    <div class="ticket-price">
-                                        <span class="price-symbol">¥</span>
-                                        <span class="price-amount"><%= Number(ticket.price).toLocaleString() %></span>
-                                    </div>
-                                </div>
-                                
-                                <p class="ticket-description"><%= ticket.description %></p>
-                                
-                                <ul class="amenities-list">
-                                    <% if (ticket.amenities) { %>
-                                        <% ticket.amenities.forEach((amenity) => { %>
-                                            <li class="amenity-item">
-                                                <span class="amenity-icon">✓</span>
-                                                <span class="amenity-text"><%= amenity %></span>
-                                            </li>
-                                        <% }) %>
-                                    <% } %>
-                                </ul>
-                            </div>
-                        </label>
-                    <% }) %>
-                <% } %>
-            </div>
+
+<div
+    class="ticket-options"
+    id="ticket-options"
+    data-trip-distance="<%= tripDistance %>"
+>
+    <% if (ticketOptions) { %>
+        <% ticketOptions.forEach((ticket) => { %>
+            <label
+                class="ticket-card"
+                for="ticket-<%= ticket.class %>"
+                data-ticket-class="<%= ticket.class %>"
+            >
+                <input
+                    type="radio"
+                    name="ticketClass"
+                    id="ticket-<%= ticket.class %>"
+                    value="<%= ticket.class %>"
+                    data-name="<%= ticket.name %>"
+                    data-price="<%= ticket.price %>"
+                    required
+                >
+
+                <div class="ticket-content">
+                    <div class="ticket-header">
+                        <h3 class="ticket-name"><%= ticket.name %></h3>
+                        <div class="ticket-price">
+                            <span class="price-symbol">¥</span>
+                            <span class="price-amount">
+                                <%= Number(ticket.price).toLocaleString() %>
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="ticket-description"><%= ticket.description %></p>
+
+                    <ul class="amenities-list">
+                        <% ticket.amenities.forEach((amenity) => { %>
+                            <li class="amenity-item">
+                                <span class="amenity-icon">✓</span>
+                                <span class="amenity-text"><%= amenity %></span>
+                            </li>
+                        <% }); %>
+                    </ul>
+
+                    <p class="unavailable-message" hidden>
+                        Not available on this day
+                    </p>
+                </div>
+            </label>
+        <% }); %>
+    <% } %>
+</div>
+
+<p id="ticket-loading" aria-live="polite"></p>
+
         </section>
 
         <section class="day-selection">
@@ -191,10 +207,16 @@
     let passengerCount = 1;
     let ticketPrice = 0;
 
-    const selectedDayLabels = document.querySelectorAll('.days-display label');
-    const passengersList = document.getElementById('passengersList');
-    const addPassengerBtn = document.getElementById('addPassenger');
-    const ticketRadios = document.querySelectorAll('input[name="ticketClass"]');
+const selectedDayLabels = document.querySelectorAll('.days-display label');
+const passengersList = document.getElementById('passengersList');
+const addPassengerBtn = document.getElementById('addPassenger');
+
+// Ticket availability elements
+const ticketOptionsContainer = document.getElementById('ticket-options');
+const ticketLoading = document.getElementById('ticket-loading');
+
+const getTicketRadios = () =>
+    document.querySelectorAll('input[name="ticketClass"]');
     
     // Update summary displays
     const selectedTicketName = document.getElementById('selectedTicketName');
@@ -386,71 +408,154 @@
         console.log(`✓ Filled ${cards.length} passenger form(s)`);
     };
 
-    // Event Listeners
-    selectedDayLabels.forEach((label) => {
-        label.addEventListener('click', (e) => {
-            e.preventDefault();
-            const label = e.currentTarget;
 
-            // Update visual and input selection
-            selectedDayLabels.forEach((lbl) => {
-                lbl.classList.remove('selected');
-                lbl.querySelector('input').checked = false;
-                lbl.querySelector('input').removeAttribute('checked');
-            });
+// Ticket selection and availability
 
-            label.classList.add('selected');
-            label.querySelector('input').checked = true;
-            label.querySelector('input').setAttribute('checked', true);
-        });
-    });
+const updateTicketSelection = (radio) => {
+    if (!radio) return;
 
-    addPassengerBtn.addEventListener('click', addPassenger);
-
-    passengersList.addEventListener('click', (e) => {
-        const removeBtn = e.target.closest('.btn-remove-passenger');
-        if (removeBtn) {
-            const card = removeBtn.closest('.passenger-card');
-            removePassenger(card);
-        }
-    });
-
-    ticketRadios.forEach((radio) => {
-        radio.addEventListener('change', (e) => {
-            e.preventDefault();
-            const selected = e.currentTarget;
-
-            // Update visual and input selection
-            ticketRadios.forEach((input) => {
-                input.checked = false;
-                input.removeAttribute('checked');
-            });
-
-            selected.checked = true;
-            selected.setAttribute('checked', true);
-
-            // Update summary
-            const ticketName = e.target.dataset.name;
-            ticketPrice = parseInt(e.target.dataset.price);
-            
-            selectedTicketName.textContent = ticketName;
-            updateSummary();
-        });
-    });
-
-    document.getElementById('autofill').addEventListener('click', (e) => {
-        e.preventDefault();
-        autoFillForm();
-    });
-
-    // Initialize ticket based on default selection
-    const selectedRadio = document.querySelector('input[name="ticketClass"]:checked');
-    if (selectedRadio) {
-        const ticketName = selectedRadio.dataset.name;
-        selectedTicketName.textContent = ticketName;
-        ticketPrice = parseInt(selectedRadio.dataset.price);
-    }
+    ticketPrice = Number(radio.dataset.price);
+    selectedTicketName.textContent = radio.dataset.name;
     updateSummary();
+};
+
+const loadTicketClassesForDay = async (day) => {
+    ticketLoading.textContent = "Checking available tickets...";
+
+    try {
+        const response = await fetch(
+            `/api/ticket-classes?day=${encodeURIComponent(day)}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to load ticket availability.");
+        }
+
+        const availableClasses = await response.json();
+
+        const availableNames = new Set(
+            availableClasses.map((ticket) => ticket.class)
+        );
+
+        ticketOptionsContainer
+            .querySelectorAll(".ticket-card")
+            .forEach((card) => {
+                const radio = card.querySelector(
+                    'input[name="ticketClass"]'
+                );
+
+                const isAvailable = availableNames.has(
+                    card.dataset.ticketClass
+                );
+
+                const message = card.querySelector(
+                    ".unavailable-message"
+                );
+
+                radio.disabled = !isAvailable;
+                card.classList.toggle("unavailable", !isAvailable);
+                message.hidden = isAvailable;
+
+                if (!isAvailable) {
+                    radio.checked = false;
+                }
+            });
+
+        const selectedRadio = [...getTicketRadios()].find(
+            (radio) => radio.checked && !radio.disabled
+        );
+
+        const firstAvailable = [...getTicketRadios()].find(
+            (radio) => !radio.disabled
+        );
+
+        const nextSelection = selectedRadio || firstAvailable;
+
+        if (nextSelection) {
+            nextSelection.checked = true;
+            updateTicketSelection(nextSelection);
+        } else {
+            ticketPrice = 0;
+            selectedTicketName.textContent = "No tickets available";
+            updateSummary();
+        }
+
+        ticketLoading.textContent = "";
+
+    } catch (error) {
+        console.error(error);
+
+        ticketLoading.textContent =
+            "Ticket availability could not be loaded. Please try again.";
+    }
+};
+
+
+// Day selection event listener
+
+selectedDayLabels.forEach((label) => {
+    label.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        selectedDayLabels.forEach((item) => {
+            item.classList.remove("selected");
+            item.querySelector("input").checked = false;
+        });
+
+        label.classList.add("selected");
+
+        const dayInput = label.querySelector("input");
+        dayInput.checked = true;
+
+        loadTicketClassesForDay(dayInput.value.toLowerCase());
+    });
+});
+
+
+// Add passenger event listener
+
+addPassengerBtn.addEventListener("click", addPassenger);
+
+
+// Remove passenger event listener
+
+passengersList.addEventListener("click", (event) => {
+    const removeBtn = event.target.closest(".btn-remove-passenger");
+
+    if (removeBtn) {
+        const card = removeBtn.closest(".passenger-card");
+        removePassenger(card);
+    }
+});
+
+
+// Ticket selection event listener
+
+ticketOptionsContainer.addEventListener("change", (event) => {
+    if (event.target.matches('input[name="ticketClass"]')) {
+        updateTicketSelection(event.target);
+    }
+});
+
+
+// Autofill event listener
+
+document.getElementById("autofill").addEventListener("click", (event) => {
+    event.preventDefault();
+    autoFillForm();
+});
+
+
+// Load availability for the initially selected day
+
+const initialDay = document.querySelector(
+    'input[name="selectedDay"]:checked'
+);
+
+if (initialDay) {
+    loadTicketClassesForDay(initialDay.value.toLowerCase());
+}
+
 </script>
 
 <%- include('../partials/footer') %>

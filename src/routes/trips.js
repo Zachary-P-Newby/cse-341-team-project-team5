@@ -1,8 +1,10 @@
-import { bookingPage, processBookingRequest } from './book.js';
+import { processBookingRequest } from './book.js';
 import confirmationPage from './confirm.js';
 import listTripsPage from './list.js';
 import tripDetailsPage from './details.js';
 import { Router } from 'express';
+import { bookingPage } from "../controllers/ticket-classes.js";
+
 
 const router = Router();
 
