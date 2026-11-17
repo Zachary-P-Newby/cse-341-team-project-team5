@@ -29,4 +29,32 @@ const getTripById = async (req, res) => {
   }
 };
 
-export { getAllTrips, getTripsById}
+const renderTripDetailsPage = async (req, res, next) => {
+    try {
+        const tripId = req.params.id;
+        const trip = await getTripById(tripId);
+
+        if (!trip) {
+            const err = new Error('Trip not found');
+            err.status = 404;
+            return next(err);
+            // Alternatively, if your app renders 404s directly instead of using error middleware:
+            // return res.status(404).render('errors/404', { title: 'Trip Not Found' });
+        }
+
+        res.render('trips/details', {
+            title: trip.name,
+            trip
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const renderTripsListPage = (req, res) => {
+    res.render('trips/list', {
+        title: 'Scenic Train Trips'
+    });
+};
+
+export { getAllTrips, getTripById, renderTripDetailsPage, renderTripsListPage}
