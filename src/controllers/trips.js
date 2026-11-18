@@ -32,7 +32,7 @@ const getTripById = async (req, res) => {
 const renderTripDetailsPage = async (req, res, next) => {
     try {
         const tripId = req.params.id;
-        const trip = await getTripById(tripId);
+        const trip = await tripModel.getTripById(tripId);
 
         if (!trip) {
             const err = new Error('Trip not found');

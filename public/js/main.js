@@ -94,6 +94,8 @@ const hookTripsCatalog = async () => {
     const listEl = document.getElementById('trips-list');
     const template = document.getElementById('trip-card-template');
 
+     // Exit early if we are not on the trips catalog page (e.g., on the trains or home page)
+    if (!loadingEl || !errorEl || !listEl || !template) return;
     try {
         const response = await fetch('/api/trips');
         if (!response.ok) {

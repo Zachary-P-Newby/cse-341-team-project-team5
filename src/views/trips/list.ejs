@@ -7,8 +7,8 @@
 </section>
 
 <section class="routes-grid">
-    <div class="route-card" id="trips-loading">Loading trips...</div>
-    <div class="trips-state trips-error" id="trips-error" hidden></div>
+    <div class="trips-state" id="trips-loading">Loading trips...</div>
+    <div class="trips-error" id="trips-error" hidden></div>
 
     <!-- Note: Moved id="trips-list" directly onto .routes-grid or ensure .trips-grid uses display: contents so .route-card remains a direct child of .routes-grid -->
     <div class="trips-grid" id="trips-list" style="display: contents;"></div>
@@ -16,7 +16,7 @@
     <template id="trip-card-template">
         <!-- JS should append region modifier class here: central | northern | kansai | hokkaido -->
         <article class="route-card">
-            <div class="train-image-wrap">
+            <div class="trip-image-wrap">
                 <img data-field="image" loading="lazy" decoding="async">
             </div>
 
@@ -27,17 +27,9 @@
             </header>
 
             <!-- Grid Area: station -->
-            <div class="station-info">
-                <div class="station">
-                    <span class="station-type">From</span>
-                    <span class="station-name" data-field="origin"></span>
-                </div>
-                <span class="route-arrow" aria-hidden="true">&rarr;</span>
-                <div class="station">
-                    <span class="station-type">To</span>
-                    <span class="station-name" data-field="destination"></span>
-                </div>
-            </div>
+<div class="station-info">
+    <span class="station-name" data-field="route"></span>
+</div>
 
             <!-- Grid Area: details -->
             <div class="route-details">
