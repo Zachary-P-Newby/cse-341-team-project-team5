@@ -1,0 +1,219 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Kizuna Rail API",
+    "version": "1.0.0",
+    "description": "API for exploring scenic rail trips and trains across the Kizuna Rail network"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current server"
+    }
+  ],
+  "paths": {
+    "/api/trips": {
+      "get": {
+        "summary": "Retrieve all trips",
+        "description": "Returns a JSON array of all available trips. Returns an empty array if no trips exist.",
+        "tags": [
+          "Trips"
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of trips",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Trip"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trips/{id}": {
+      "get": {
+        "summary": "Retrieve a single trip by ID",
+        "description": "Returns a single trip matching the custom slug ID.",
+        "tags": [
+          "Trips"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Custom trip identifier (e.g., gorge-explorer)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching trip object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Trip"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trip not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Trip not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Trip": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "region",
+          "startStation",
+          "endStation",
+          "duration",
+          "distance"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Custom URL-friendly trip identifier",
+            "example": "gorge-explorer"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the trip",
+            "example": "Kurobe Gorge Explorer"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed summary of the trip experience",
+            "example": "Navigate through dramatic gorges and cross spectacular bridges in the Northern Alps."
+          },
+          "region": {
+            "type": "string",
+            "description": "Geographic region of the trip",
+            "example": "central"
+          },
+          "startStation": {
+            "type": "string",
+            "description": "Departure station identifier",
+            "example": "unazuki"
+          },
+          "endStation": {
+            "type": "string",
+            "description": "Arrival station identifier",
+            "example": "keyakidaira"
+          },
+          "duration": {
+            "type": "string",
+            "description": "Estimated travel duration",
+            "example": "1.5 hours"
+          },
+          "distance": {
+            "type": "number",
+            "description": "Total route distance in kilometers",
+            "example": 20
+          },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Notable scenic attractions along the route",
+            "example": [
+              "Kurobe Gorge",
+              "Alpine bridges",
+              "Waterfall views"
+            ]
+          },
+          "bestSeason": {
+            "type": "string",
+            "description": "Recommended season for traveling",
+            "example": "autumn"
+          },
+          "operatingMonths": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "Months of the year the route operates (1-12)",
+            "example": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Path to the route image asset",
+            "example": "/images/routes/gorge-explorer.png"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

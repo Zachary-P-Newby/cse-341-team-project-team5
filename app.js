@@ -3,12 +3,19 @@ import Path from 'path';
 import { fileURLToPath } from 'url';
 import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
-import routes from './src/routes/router.js';
+import routes from './src/routes/router.js'
+import apiRoutes from './src/routes/api-routes.js'
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' with { type: 'json' };
+import mongoose from 'mongoose';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 
 const app = express();
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Add version info to res.locals for access in templates.
 app.use((req, res, next) => {
@@ -27,6 +34,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(globalMiddleware);
 app.use('/', routes);
+app.use('/', apiRoutes);
+
+// Connect mongoose to use mongoose schemaa
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(3000, () => console.log('Server running on port 3000'));
+  })
+  .catch((err) => console.error('Database connection error:', err))
 
 // Catch requests that did not match a route.
 app.use((req, res, next) => {
