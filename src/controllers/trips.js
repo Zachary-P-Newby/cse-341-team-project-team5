@@ -42,12 +42,12 @@ const renderTripDetailsPage = async (req, res, next) => {
             // return res.status(404).render('errors/404', { title: 'Trip Not Found' });
         }
 
-        res.render('trips/details', {
+        return res.render('trips/details', {
             title: trip.name,
             trip
         });
     } catch (error) {
-        next(error);
+        return next(error);
     }
 };
 
