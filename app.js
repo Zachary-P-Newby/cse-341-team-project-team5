@@ -5,6 +5,7 @@ import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
 import routes from './src/routes/router.js'
 import apiRoutes from './src/routes/api-routes.js'
+import ejsRoutes from './src/routes/ejs-routes.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json' with { type: 'json' };
 import mongoose from 'mongoose';
@@ -35,6 +36,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(globalMiddleware);
 app.use('/', routes);
 app.use('/', apiRoutes);
+app.use('/', ejsRoutes);
 
 // Connect mongoose to use mongoose schemaa
 mongoose.connect(process.env.MONGODB_URI)
@@ -65,3 +67,4 @@ app.use((err, req, res, next) => {
 });
 
 export default app;
+``

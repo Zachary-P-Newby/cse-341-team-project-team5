@@ -18,10 +18,10 @@ router.get('/trains', trainsPage);
 router.get('/api/trains', trainsApi);
 
 // Rail trips
-router.use('/trips', tripsPage);
+// router.use('/trips', tripsPage);
 
 // Rail API
-router.use('/api/trips', tripsApi)
+// router.use('/api/trips', tripsApi)
 
 // Test 500 error page
 router.get('/500', testErrorPage);

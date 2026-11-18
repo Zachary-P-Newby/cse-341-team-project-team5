@@ -15,19 +15,17 @@ const getAllTrips = async (req, res) => {
 // GET /api/trips/:id returns a json object
 const getTripById = async (req, res) => {
     try {
-        console.log('gettripbyid');
-    const { id } = req.params;
-    const trip = await tripModel.getTripById(id);
-      console.log("trip", trip);
-    if (!trip) {
-      return res.status(404).json({ message: 'Trip not found' });
-    }
+        const { id } = req.params;
+        const trip = await tripModel.getTripById(id);
+        if (!trip) {
+            return res.status(404).json({ message: 'Trip not found' });
+        }
 
-    return res.status(200).json(trip);
-  } catch (error) {
-    console.error(`Error fetching trip with id "${req.params.id}":`, error);
-    return res.status(500).json({ message: 'Internal server error' });
-  }
+        return res.status(200).json(trip);
+    } catch (error) {
+        console.error(`Error fetching trip with id "${req.params.id}":`, error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
 };
 
 const renderTripDetailsPage = async (req, res, next) => {

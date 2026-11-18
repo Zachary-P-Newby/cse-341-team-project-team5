@@ -72,6 +72,8 @@ const tripSchema = new mongoose.Schema(
   }
 );
 
-const Trip = mongoose.model('Trip', tripSchema);
+const databaseName = process.env.MONGODB_DB_NAME || 'practice';
+const specificDb = mongoose.connection.useDb(databaseName, { useCache: true });
+const Trip = specificDb.model('Trip', tripSchema);
 
 export default Trip;
