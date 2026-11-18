@@ -100,7 +100,8 @@ const hookTripsCatalog = async () => {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const trips = await response.json();
+        const payload = await response.json();
+        const trips = payload.trips || [];
         loadingEl.hidden = true;
 
         if (!Array.isArray(trips) || trips.length === 0) {

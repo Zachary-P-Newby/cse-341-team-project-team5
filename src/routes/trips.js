@@ -1,23 +1,16 @@
-import { bookingPage, processBookingRequest } from './book.js';
-import confirmationPage from './confirm.js';
+import { getDb } from '../db/connect.js';
 
+const tripsPage = (req, res) => {
+    res.render('trips', { title: 'Trips' });
+};
 
-import { renderTripsListPage, renderTripDetailsPage } from '../controllers/trips.js';
-import { Router } from 'express';
+const tripsApi = async (req, res, next) => {
+    try {
+        const trips = await getDb().collection('trips').find({}).toArray();
+        return res.json({ trips });
+    } catch (error) {
+        return next(error);
+    }
+};
 
-const router = Router();
-
-// List all trips
-router.get('/trips', renderTripsListPage);
-
-// Trip details page
-router.get('/trips/:id', renderTripDetailsPage);
-
-// Book ticket
-router.get('/booking/:scheduleId', bookingPage);
-router.post('/book', processBookingRequest);
-
-// Booking confirmation page
-router.get('/confirmation/:confirmationId', confirmationPage);
-
-export default router;
+export { tripsApi, tripsPage };
