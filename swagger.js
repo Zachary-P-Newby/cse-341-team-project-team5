@@ -1,5 +1,6 @@
-import {writeFileSync} from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import swaggerJsddoc from 'swagger-jsdoc';
+
 
 const options = {
   definition: {

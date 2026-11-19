@@ -3,21 +3,21 @@
 <article class="route-detail">
     <div class="route-header">
         <div class="route-header-content">
-            <h1 class="route-name"><%= details.name %></h1>
-            <p class="route-description"><%= details.description %></p>
+            <h1 class="route-name"><%= trip.name %></h1>
+            <p class="route-description"><%= trip.description %></p>
             
-            <% if (details.highlights && details.highlights.length > 0) { %>
+            <% if (trip.highlights && trip.highlights.length > 0) { %>
             <div class="highlights">
-                <% details.highlights.forEach(function(highlight) { %>
+                <% trip.highlights.forEach(function(highlight) { %>
                 <span class="highlight-tag"><%= highlight %></span>
                 <% }); %>
             </div>
             <% } %>
         </div>
         
-        <% if (details.imageUrl) { %>
+        <% if (trip.imageUrl) { %>
         <div class="route-image">
-            <img src="<%= details.imageUrl %>" alt="<%= details.name %>">
+            <img src="<%= trip.imageUrl %>" alt="<%= trip.name %>">
         </div>
         <% } %>
     </div>
@@ -26,22 +26,22 @@
         <div class="info-grid">
             <div class="info-item">
                 <span class="info-label">Region</span>
-                <span class="info-value region-<%= details.region %>"><%= details.region.charAt(0).toUpperCase() + details.region.slice(1) %></span>
+                <span class="info-value region-<%= trip.region %>"><%= trip.region.charAt(0).toUpperCase() + trip.region.slice(1) %></span>
             </div>
             
             <div class="info-item">
                 <span class="info-label">Duration</span>
-                <span class="info-value"><%= details.duration %></span>
+                <span class="info-value"><%= trip.duration %></span>
             </div>
             
             <div class="info-item">
                 <span class="info-label">Distance</span>
-                <span class="info-value"><%= details.distance %> km</span>
+                <span class="info-value"><%= trip.distance %> km</span>
             </div>
             
             <div class="info-item">
                 <span class="info-label">Best Season</span>
-                <span class="info-value season-<%= details.bestSeason %>"><%= details.bestSeason.charAt(0).toUpperCase() + details.bestSeason.slice(1) %></span>
+                <span class="info-value season-<%= trip.bestSeason %>"><%= trip.bestSeason.charAt(0).toUpperCase() + trip.bestSeason.slice(1) %></span>
             </div>
         </div>
 
@@ -50,12 +50,12 @@
             <div class="stations">
                 <div class="station">
                     <span class="station-label">Start</span>
-                    <span class="station-name"><%= details.startStation.charAt(0).toUpperCase() + details.startStation.slice(1) %></span>
+                    <span class="station-name"><%= trip.startStation.charAt(0).toUpperCase() + trip.startStation.slice(1) %></span>
                     <button id="start-details-button" class="station-details-button">Details</button>
                 </div>
                 <div class="station">
                     <span class="station-label">End</span>
-                    <span class="station-name"><%= details.endStation.charAt(0).toUpperCase() + details.endStation.slice(1) %></span>
+                    <span class="station-name"><%= trip.endStation.charAt(0).toUpperCase() + trip.endStation.slice(1) %></span>
                     <button id="end-details-button" class="station-details-button">Details</button>
                     
                 </div>
@@ -105,17 +105,17 @@
         <div class="route-operating">
             <h2>Operating Schedule</h2>
             <div class="months-grid">
-                <% details.operatingMonths.forEach(function(month) { %>
+                <% trip.operatingMonths.forEach(function(month) { %>
                 <span class="month-badge"><%= month %></span>
                 <% }); %>
             </div>
         </div>
 
-        <% if (details.schedules && details.schedules.length > 0) { %>
+        <% if (trip.schedules && trip.schedules.length > 0) { %>
         <div class="route-schedules">
             <h2>Available Schedules</h2>
             <div class="schedules-grid">
-                <% details.schedules.forEach(function(schedule) { %>
+                <% trip.schedules.forEach(function(schedule) { %>
                 <div class="schedule-card">
                     <div class="schedule-times">
                         <div class="time-block">
