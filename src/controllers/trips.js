@@ -1,5 +1,6 @@
 // used ai
 import * as tripModel from '../models/trips.js';
+import { getDb } from '../db/connect.js';
 
 // get /api/trips returns as a json array
 const getAllTrips = async (req, res) => {
@@ -41,9 +42,30 @@ const renderTripDetailsPage = async (req, res, next) => {
             // return res.status(404).render('errors/404', { title: 'Trip Not Found' });
         }
 
+        const db = getDb();
+        trip.schedules = await db.collection('schedules').find({ tripId }).toArray();
+
+        let startStationDetails = await db.collection('stations').findOne({ id: trip.startStation });
+        
+        let endStationDetails = await db.collection('stations').findOne({ id: trip.endStation });
+
+        if (!startStationDetails) {
+            startStationDetails = {
+                error: "Station Unavailible"
+            }
+        }
+
+        if (!endStationDetails) {
+            endStationDetails = {
+                error: "Station Unavailible"
+            }
+        }
+
         return res.render('trips/details', {
             title: trip.name,
-            trip
+            trip,
+            startStationDetails,
+            endStationDetails
         });
     } catch (error) {
         return next(error);
