@@ -50,12 +50,55 @@
             <div class="stations">
                 <div class="station">
                     <span class="station-label">Start</span>
-                    <span class="station-name"><%= trip.startStation.charAt(0).toUpperCase() + trip.startStation.slice(1) %></span>
+                    <span class="station-name"><%= details.startStation.charAt(0).toUpperCase() + details.startStation.slice(1) %></span>
+                    <button id="start-details-button" class="station-details-button">Details</button>
                 </div>
                 <div class="station">
                     <span class="station-label">End</span>
-                    <span class="station-name"><%= trip.endStation.charAt(0).toUpperCase() + trip.endStation.slice(1) %></span>
+                    <span class="station-name"><%= details.endStation.charAt(0).toUpperCase() + details.endStation.slice(1) %></span>
+                    <button id="end-details-button" class="station-details-button">Details</button>
+                    
                 </div>
+                
+            </div>
+        </div>
+
+        <div class="route-stations-details" id="station-details">
+            <div class="stations">
+                    <article class="station-details-article" id="start-station-details-article">
+                        <%if(!startStationDetails || startStationDetails.error){ %>
+                            <h4>Station Data Unavailible</h4>
+                        <%} else {%>
+                            <strong><%= startStationDetails.name%></strong>
+                            <p><%= startStationDetails.prefecture %> Prefecture</p> - 
+                            <p><%= startStationDetails.description %></p>
+                            <strong>Facilities:</strong>
+                            <ul>
+                                <% startStationDetails.facilities.forEach(facility=>{ %>
+                                    <% facility = facility.replaceAll("_", " "); %>
+                                    <li><%= facility.charAt(0).toUpperCase() + facility.slice(1) %></li>
+                                <% })%>
+                            </ul>
+                        <%}%>
+                    </article>
+                    <article class="station-details-article" id="end-station-details-article">
+                        <%if(!endStationDetails || endStationDetails.error){ %>
+                            <h4>Station Data Unavailible</h4>
+                        <%} else {%>
+                            <strong><%= endStationDetails.name%></strong>
+                            <p><%= endStationDetails.prefecture %> Prefecture</p> - 
+                            <p><%= endStationDetails.description %></p>
+                            <strong>Facilities:</strong>
+                            <ul>
+                                <% endStationDetails.facilities.forEach(facility=>{ %>
+                                    <% facility = facility.replaceAll("_", " "); %>
+                                    <li><%=  facility.charAt(0).toUpperCase() + facility.slice(1) %></li>
+                                <% })%>
+                            </ul>
+                        <%}%>
+                        
+                        
+                    </article>
             </div>
         </div>
 
@@ -100,3 +143,75 @@
 </article>
 
 <%- include('../partials/footer') %>
+
+<script>
+
+    /*
+    Hide and show station details articles based on button press.
+    */
+
+    const startDetailsButton = document.getElementById("start-details-button");
+    const endDetailsButton = document.getElementById("end-details-button");
+    
+    const startStationDetailsArticle = document.getElementById("start-station-details-article");
+    const endStationDetailsArticle = document.getElementById("end-station-details-article")
+
+    let startStationDetailsIsShowing = false;
+    let endStationDetailsIsShowing = false;
+
+    function hideElement(element){
+        element.style.display = "none";
+    }
+
+    function showElement(element){
+        element.style.display = "block";
+    }
+
+    function handleStartStationDetailsClick(){
+        
+        if(startStationDetailsIsShowing){
+            hideElement(startStationDetailsArticle);
+            startStationDetailsIsShowing = false;
+            return;
+        }else{
+            
+            if(endStationDetailsIsShowing){
+                hideElement(endStationDetailsArticle);
+                endStationDetailsIsShowing = false;}
+
+            showElement(startStationDetailsArticle);
+
+            startStationDetailsIsShowing = true;
+            return;
+        }
+
+    }
+
+    function handleEndStationDetailsClick(){
+        
+        if(endStationDetailsIsShowing){
+
+            
+
+            hideElement(endStationDetailsArticle);
+            endStationDetailsIsShowing = false;
+            return;
+        }else{
+
+            if(startStationDetailsIsShowing){
+                hideElement(startStationDetailsArticle);
+                startStationDetailsIsShowing = false;
+            }
+
+            showElement(endStationDetailsArticle);
+            endStationDetailsArticle.style.display = "block";
+            endStationDetailsIsShowing = true;
+            return;
+        }
+    }
+
+    startDetailsButton.addEventListener("click", handleStartStationDetailsClick);
+    
+    endDetailsButton.addEventListener("click", handleEndStationDetailsClick);
+
+</script>

@@ -24,6 +24,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // Configure static files and EJS templates.
 app.use(express.static(Path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');

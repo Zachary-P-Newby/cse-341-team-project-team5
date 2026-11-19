@@ -1,27 +1,25 @@
 import { writeFileSync } from 'node:fs';
-import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerJsddoc from 'swagger-jsdoc';
 
 
 const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Kizuna Rail API',
-      version: '1.0.0',
-      description: 'API for exploring scenic rail trips and trains across the Kizuna Rail network'
+        title: 'Kizuna Rail API',
+        version: '1.0.0',
+        description: 'Japanese Railway Booking Website API',
     },
     servers: [
-      {
-        url: '/',
-        description: 'Current server'
-      }
-    ]
+        {
+            url: '/',
+            description: 'Current server'
+        }
+    ],
   },
-  // Scans all route files, controllers, and server.js for @swagger JSDoc comments
-  apis: ['./src/routes/*.js', './src/controllers/*.js', './server.js']
+  apis: ['./src/routes/router.js', './src/routes/api-routes.js', './src/routes/ejs-routes.js', './app.js'], // Path to the API docs
 };
 
-const swaggerSpec = swaggerJsdoc(options);
-
+const swaggerSpec = swaggerJsddoc(options);
 writeFileSync('./swagger.json', JSON.stringify(swaggerSpec, null, 2));
-console.log('Swagger documentation generated.');
+console.log('Swagger documentation generated successfully!');
