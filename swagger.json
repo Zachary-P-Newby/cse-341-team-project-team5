@@ -52,34 +52,13 @@
         }
       }
     },
-    "/api/stations": {
-      "get": {
-        "summary": "Gets all of the train stations.",
-        "tags": [
-          "Stations"
-        ],
-        "responses": {
-          "200": {
-            "description": "All Stations."
-          },
-          "500": {
-            "description": "Internal Service Error."
-          }
-        }
-      }
-    },
     "/api/trips/{id}": {
       "get": {
         "summary": "Retrieve a single trip by ID",
         "description": "Returns a single trip matching the custom slug ID.",
         "tags": [
           "Trips"
-        ]
-      }
-    },
-    "/api/stations/{id}": {
-      "get": {
-        "summary": "Gets a train by id",
+        ],
         "parameters": [
           {
             "in": "path",
@@ -133,6 +112,52 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/stations": {
+      "get": {
+        "summary": "Gets all of the train stations.",
+        "tags": [
+          "Stations"
+        ],
+        "responses": {
+          "200": {
+            "description": "All Stations."
+          },
+          "500": {
+            "description": "Internal Service Error."
+          }
+        }
+      }
+    },
+    "/api/stations/{id}": {
+      "get": {
+        "summary": "Gets a train by id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The Station ID."
+          }
+        ],
+        "tags": [
+          "Stations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Station Found."
+          },
+          "404": {
+            "description": "Station Not Found."
+          },
+          "500": {
+            "description": "Internal Service Error."
           }
         }
       }
@@ -231,20 +256,6 @@
             "type": "string",
             "description": "Path to the route image asset",
             "example": "/images/routes/gorge-explorer.png"
-          }
-        },
-        "tags": [
-          "Stations"
-        ],
-        "responses": {
-          "200": {
-            "description": "Station Found."
-          },
-          "404": {
-            "description": "Station Not Found."
-          },
-          "500": {
-            "description": "Internal Service Error."
           }
         }
       }
