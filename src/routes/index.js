@@ -10,7 +10,6 @@ const registerPage = (req, res)=> {
     res.render('register', {title: 'Register'})
 }
 
-
 const loginPage = (req, res)=> {
     res.render('login', {title: 'Login'})
 }

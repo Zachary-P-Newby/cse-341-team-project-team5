@@ -1,56 +1,90 @@
 import { createUser, findUserByEmail, verifyPassword } from "../models/users.js";
 
 
-export async function register(req, res){
+export async function processRegisterForm(req, res){
 
     
     const formData = req.body;
-    console.log(formData);
+   
     //validation
     if (!formData.name || !formData.email || !formData.password) {
-        return res.status(400).json({ message: "All fields are required" });
+        req.flash("error","Missing Fields - Fill Out All Fields");
+        return res.redirect("/register");
     }
 
+    const user = await findUserByEmail(formData.email);
+    if (user) {
+        req.flash("error","Email Already In Use");
+        return res.redirect("/register");
+        }
+
     if(formData.password != formData.confirmPassword){
-        console.log(formData.password, formData.confirmPassword)
-        return res.status(400).json({ message: "Passwords do not match" });
+
+        req.flash("error","Passwords Do Not Match");
+        return res.redirect("/register");
     }
 
     try{
         await createUser(formData.name, formData.email, formData.password);
-        return res.status(201).json({ message: "User created successfully" });
+
+        req.flash("success", "Sucessfully Created User");
+        return res.redirect("/login"); //sign into newly created account
+
     }catch(error){
-        console.error("Error creating user:", error);
-        return res.status(500).json({ message: "Error creating user" });
+
+        req.flash("error","Internal Error - Could Not Create User");
+        return res.redirect("/register");
     }
 
 }
 
-export async function login(req, res){
+export async function processLoginForm(req, res){
     const formData = req.body;
 
     //validation
     if (!formData.email || !formData.password) {
-        return res.status(400).json({ message: "All fields are required" });
+        
+        req.flash("error","Missing Fields - Fill Out All Fields");
+        return res.redirect("/login");
     }
 
 
     try{
         const user = await findUserByEmail(formData.email);
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            req.flash("error","User Not Found");
+            return res.redirect("/login");
         }
-        console.log(user);
+
 
         const isMatch = await verifyPassword(formData.password, user.passwordHash);
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid credentials" });
+
+            req.flash("error","Invalid Password");
+            return res.redirect("/login");
         }
 
-        return res.status(200).json({ message: "Login successful" });
+        // In the successful-login branch of the login controller
+        req.session.user = {
+        id: user._id.toString(),
+        name: user.name,
+        role: user.role.name // for example, 'customer' or 'admin'
+        };
+        req.flash("success","Logged In");
+        return res.redirect('/');
+
     }catch(error){
         console.error("Error during login:", error);
-        return res.status(500).json({ message: "Error during login" });
+
+        req.flash("error","Internal Service Error - Could Not Log In");
+        return res.redirect("/login");
     }
 }
-export async function logout(){}
+export async function processLogout(req, res){
+    if (req.session.user) {
+        delete req.session.user;
+    }
+
+    req.flash('success', 'Logout successful!');
+    res.redirect('/login');
+};

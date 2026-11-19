@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import railTripsRouter from './trips.js';
 import {trainsPage } from './trains.js';
-import {register, login, logout} from '../controllers/users.js';
-
+import {processRegisterForm, processLoginForm, processLogout} from '../controllers/users.js';
+import { adminDashboard, accountPage } from './accounts.js';
 import { homePage, aboutPage, testErrorPage, registerPage, loginPage } from './index.js';
+import { requirePageLogin, requirePageRole } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -21,15 +22,20 @@ router.get('/trains', trainsPage);
 
 //register
 router.get('/register', registerPage);
-router.post("/register", register);
+router.post("/register", processRegisterForm);
 
 //login
 router.get("/login", loginPage);
-router.post("/login", login);
+router.post("/login", processLoginForm);
 
 //logout
-router.get("/logout", logout);
+router.get("/logout", processLogout);
 
+//account
+router.get("/account", requirePageLogin, accountPage)
+
+//admin
+router.get("/admin/dashboard", requirePageLogin, requirePageRole("admin"), adminDashboard);
 
 // Rail trips
 router.use('/trips', railTripsRouter);

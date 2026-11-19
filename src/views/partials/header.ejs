@@ -38,12 +38,27 @@
                     <li><a href="/trips">Trips</a></li>
                     <li><a href="/trains">Trains</a></li>
                     <li><a href="/about">About</a></li>
-                    <li><a href="/register">Sign Up</a></li>
-                    <li><a href="/login">Log in</a></li>
+                <% if (isUserLoggedIn) { %>
+                    <li><a href="/account">Account</a></li>
+                    <li><a href="/logout">Logout</a></li>
+            <% ;} else { %>
+                    <li><a href="/register">Register</a></li>
+                    <li><a href="/login">Login</a></li>
+            <% ;}; %>
                     <li><a href="/404">404</a></li>
                     <li><a href="/500">500</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+    <% const messages = flash(); %>
+    <% Object.keys(messages).forEach(type => { %>
+        <% if (messages[type].length > 0) { %>
+            <div class="alert <%= type %>">
+                <% messages[type].forEach(msg => { %>
+                    <p><%= msg %></p>
+                <% }); %>
+            </div>
+        <% } %>
+    <% }); %>
     <main class="content-grid">

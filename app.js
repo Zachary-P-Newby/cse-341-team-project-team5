@@ -5,6 +5,8 @@ import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
 import routes from './src/routes/router.js';
 import session from 'express-session';
+import { loadSessionUser } from './src/middleware/auth.js';
+import flash from './src/middleware/flash.js';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
@@ -27,6 +29,28 @@ app.use(session({
     rolling: true,
     cookie: {maxAge: 60 * 60 * 1000} //session expires after 1 hour of inactivity
 }));
+
+
+app.use(loadSessionUser);
+
+//set up res.locals values for isLoggedIn
+app.use((req,res, next) => {
+  res.locals.isUserLoggedIn = false;
+  if (req.session && req.session.user){
+    res.locals.isUserLoggedIn = true;
+
+    res.locals.user = req.session.user;
+  }
+  else{
+     res.locals.user = null;
+  }
+
+  next();
+})
+
+
+//set up flash
+app.use(flash);
 
 // Configure static files and EJS templates.
 app.use(express.static(Path.join(__dirname, 'public'))); //set path to public files
