@@ -1,0 +1,8 @@
+[
+    {
+        "name": "example",
+        "email": "example@example.com",
+        "passwordHash": "This is definately a hash",
+        "role": "customer"
+    }
+]

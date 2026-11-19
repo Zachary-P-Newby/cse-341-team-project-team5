@@ -4,6 +4,9 @@ import { fileURLToPath } from 'url';
 import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
 import routes from './src/routes/router.js';
+import session from 'express-session';
+
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
@@ -16,10 +19,19 @@ app.use((req, res, next) => {
     next();
 });
 
+//set up session management
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {maxAge: 60 * 60 * 1000} //session expires after 1 hour of inactivity
+}));
+
 // Configure static files and EJS templates.
-app.use(express.static(Path.join(__dirname, 'public')));
-app.set('view engine', 'ejs');
-app.set('views', Path.join(__dirname, 'src/views'));
+app.use(express.static(Path.join(__dirname, 'public'))); //set path to public files
+app.set('view engine', 'ejs'); //set what view engine to use
+app.set('views', Path.join(__dirname, 'src/views')); //set directory to views folder
 
 // Parse JSON and URL-encoded request bodies.
 app.use(express.json({ limit: '10mb' }));
