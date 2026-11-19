@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Kizuna Rail API",
+    "version": "1.0.0",
+    "description": "API for working with Kizuna Rail data, including bookings, trains, and stations."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Current server"
+    }
+  ],
+  "paths": {
+    "/api/bookings": {
+      "get": {
+        "summary": "Retrieve all bookings",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookings retrieved successfully"
+          },
+          "500": {
+            "description": "Unable to retrieve bookings"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a booking",
+        "tags": [
+          "Bookings"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "passengerFirstName",
+                  "passengerLastName",
+                  "passengerEmail",
+                  "passengerPhone"
+                ],
+                "properties": {
+                  "passengerFirstName": {
+                    "type": "string"
+                  },
+                  "passengerLastName": {
+                    "type": "string"
+                  },
+                  "passengerEmail": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "passengerPhone": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "passengerFirstName": "Alex",
+                "passengerLastName": "Morgan",
+                "passengerEmail": "alex.morgan@example.com",
+                "passengerPhone": "+81-90-1234-5678"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "JR8K2M4P1",
+                  "createdAt": "2026-11-18T18:00:00.000Z",
+                  "passengerFirstName": "Alex",
+                  "passengerLastName": "Morgan",
+                  "passengerEmail": "alex.morgan@example.com",
+                  "passengerPhone": "+81-90-1234-5678"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to process booking request"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": []
+}

@@ -4,11 +4,17 @@ import { fileURLToPath } from 'url';
 import pkg from './package.json' with { type: 'json' };
 import globalMiddleware from './src/middleware/global.js';
 import routes from './src/routes/router.js';
+import apiRoutes from './src/routes/api-routes.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 
+
 const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Add version info to res.locals for access in templates.
 app.use((req, res, next) => {
@@ -28,6 +34,8 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(globalMiddleware);
 app.use('/', routes);
 
+//Create route for API endpoints
+app.use('/api', apiRoutes);
 // Catch requests that did not match a route.
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
