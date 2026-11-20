@@ -1,6 +1,8 @@
 // used ai
 import * as tripModel from '../models/trips.js';
 import { getDb } from '../db/connect.js';
+import { getStationById } from '../models/stations.js';
+
 
 // get /api/trips returns as a json array
 const getAllTrips = async (req, res) => {
@@ -45,9 +47,9 @@ const renderTripDetailsPage = async (req, res, next) => {
         const db = getDb();
         trip.schedules = await db.collection('schedules').find({ tripId }).toArray();
 
-        let startStationDetails = await db.collection('stations').findOne({ id: trip.startStation });
+        let startStationDetails = await getStationById(trip.startStation);
         
-        let endStationDetails = await db.collection('stations').findOne({ id: trip.endStation });
+        let endStationDetails = await getStationById(trip.endStation );
 
         if (!startStationDetails) {
             startStationDetails = {

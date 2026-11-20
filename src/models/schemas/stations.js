@@ -36,6 +36,8 @@ const stationSchema = new mongoose.Schema(
     }
 )
 
-const station = mongoose.model("Station", stationSchema);
+const databaseName = process.env.MONGODB_DB_NAME || 'practice';
+const specificDb = mongoose.connection.useDb(databaseName, { useCache: true });
+const station = specificDb.model("Station", stationSchema);
 
 export default station;

@@ -171,7 +171,7 @@ router.get('api/stations', getAllStations);
 * @swagger
 *   /api/stations/{id}:
 *       get:
-*           summary: Gets a train by id
+*           summary: Gets a station by id
 *           parameters:
 *             - in: path
 *               name: id
