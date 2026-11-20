@@ -3,6 +3,8 @@ import {
     createBooking
 } from "../models/bookings.js";
 
+import { getDb } from '../db/connect.js'; 
+
 import { generateBookingCode } from '../includes/helpers.js';
 
 
@@ -31,6 +33,7 @@ const processBookingRequest = async (req, res) => {
     const createdBooking = await createBooking(booking);
 
     res.redirect(`/trips/confirmation/${createdBooking.id}`);
+    return res.status(201).json(createBooking);
    }catch (error) {
     console.error("Error processing booking request:", error);
     return res.status(500).json({ message: "Unable to process booking request" });

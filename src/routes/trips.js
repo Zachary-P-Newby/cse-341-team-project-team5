@@ -12,7 +12,7 @@ router.get('/', listTripsPage);
 // Trip details page
 router.get('/:tripId', tripDetailsPage);
 
-// Book ticket
+// Book ticket 
 router.get('/booking/:scheduleId', bookingPage);
 router.post('/book', processBookingRequest);
 

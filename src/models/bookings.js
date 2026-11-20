@@ -1,16 +1,16 @@
 import booking from "./schemas/bookings.js";
 
-const createBooking = (booking) => { 
-    return booking.create(booking);
+const createBooking = (book) => { 
+    return booking.create(book);
 }
 
 const getAllBookings = () => {
-    return booking.find();
+    return booking.find().lean();
 }
 
 const getBookingById = (bookingId) => {
     
-    return booking.findById(bookingId);
+    return booking.findById(bookingId).lean();
 }
 
 export { 

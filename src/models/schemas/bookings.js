@@ -7,7 +7,7 @@ const bookingSchema = new mongoose.Schema(
         required: true,
         unique: true,
     },
-    createAt: {
+    createdAt: {
         type: String,
         required: true
     },
