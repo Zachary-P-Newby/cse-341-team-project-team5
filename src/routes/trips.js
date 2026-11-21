@@ -1,4 +1,4 @@
-import { processBookingRequest } from './book.js';
+import { bookingPage, processBookingRequest } from '../controllers/bookings.js';
 import confirmationPage from './confirm.js';
 import listTripsPage from './list.js';
 import tripDetailsPage from './details.js';
@@ -14,7 +14,7 @@ router.get('/', listTripsPage);
 // Trip details page
 router.get('/:tripId', tripDetailsPage);
 
-// Book ticket
+// Book ticket 
 router.get('/booking/:scheduleId', bookingPage);
 router.post('/book', processBookingRequest);
 

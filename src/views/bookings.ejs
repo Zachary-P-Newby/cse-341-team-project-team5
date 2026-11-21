@@ -1,0 +1,66 @@
+
+<%- include('./partials/header') %>
+
+<h1>Bookings Administration</h1>
+
+<div id="bookings-container"></div>
+
+<template id="booking-template">
+    <div class="booking-card">
+        <h3 class="passenger-name"></h3>
+        <p class="passenger-email"></p>
+        <p class="passenger-phone"></p>
+        <p class="booking-date"></p>
+    </div>
+</template>
+
+<script>
+    const container = document.getElementById('bookings-container');
+    const template = document.getElementById('booking-template');
+
+    const getAllBookings = async () => {
+        try {
+            const response = await fetch('/api/bookings');
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve bookings');
+            }
+
+            const bookings = await response.json();
+
+            if (bookings.length === 0) {
+                container.textContent = 'No bookings found.';
+                return;
+            }
+
+            bookings.forEach((booking) => {
+
+                // Clone the template
+                const bookingCard = template.content.cloneNode(true);
+
+                // Get elements from the cloned template
+                bookingCard.querySelector('.passenger-name').textContent =
+                    `Passenger Names: ${booking.passengerFirstName} ${booking.passengerLastName}`;
+
+                bookingCard.querySelector('.passenger-email').textContent =
+                    `Email: ${booking.passengerEmail}`;
+
+                bookingCard.querySelector('.passenger-phone').textContent =
+                    `Phone: ${booking.passengerPhone}`;
+
+                bookingCard.querySelector('.booking-date').textContent =
+                    `Date: ${booking.createdAt}`;
+
+                // Add the cloned template to the page
+                container.appendChild(bookingCard);
+            });
+
+        } catch (err) {
+            console.error(err);
+            container.textContent = 'Unable to load bookings.';
+        }
+    };
+
+    getAllBookings();
+</script>
+<%- include('./partials/footer') %>
