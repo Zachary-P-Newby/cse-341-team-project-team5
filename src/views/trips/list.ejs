@@ -1,76 +1,79 @@
 <%- include('../partials/header') %>
-<section class="trips-hero">
-    <h1>Explore our Scenic Trips</h1>
-    <p>
-        Discover unforgettable rail journeys across the Kizuna Rail network.
-    </p>
-</section>
+<h1><%- title %></h1>
 
-<section class="routes-grid">
-    <div class="trips-state" id="trips-loading">Loading trips...</div>
-    <div class="trips-error" id="trips-error" hidden></div>
+<div id="filters">
+    Search by Region:
+    <select id="region-filter">
+        <option value="all">All Regions</option>
+        <% regions.forEach((region) => { %>
+            <option value="<%= region %>" <%= query.region === region ? 'selected' : '' %>><%= region.charAt(0).toUpperCase() + region.slice(1) %></option>
+        <% }); %>
+    </select>
 
-    <!-- Note: Moved id="trips-list" directly onto .routes-grid or ensure .trips-grid uses display: contents so .route-card remains a direct child of .routes-grid -->
-    <div class="trips-grid" id="trips-list" style="display: contents;"></div>
-
-    <template id="trip-card-template">
-        <!-- JS should append region modifier class here: central | northern | kansai | hokkaido -->
-        <article class="route-card">
-            <div class="trip-image-wrap">
-                <img data-field="image" loading="lazy" decoding="async">
-            </div>
-
-            <!-- Grid Area: header -->
-            <header class="route-header">
-                <h2 class="route-name" data-field="name"></h2>
-                <span class="route-region" data-field="region"></span>
-            </header>
-
-            <!-- Grid Area: station -->
-<div class="station-info">
-    <span class="station-name" data-field="route"></span>
+    Search by Season:
+    <select id="season-filter">
+        <option value="all">Any Season</option>
+        <% seasons.forEach((season) => { %>
+            <option value="<%= season %>" <%= query.season === season ? 'selected' : '' %>><%= season.charAt(0).toUpperCase() + season.slice(1) %></option>
+        <% }); %>
+    </select>
 </div>
 
-            <!-- Grid Area: details -->
+<div class="routes-grid">
+    <% trips.forEach(trip => { %>
+        <div class="route-card <%= trip.region %>">
+            <div class="route-header">
+                <h2 class="route-name"><%= trip.name %></h2>
+                <span class="route-region"><%= trip.region %></span>
+            </div>
+
+            <div class="station-info">
+                <div class="station">
+                    <div class="station-type">From:</div>
+                    <div class="station-name"><%= trip.startStation %></div>
+                </div>
+                <div class="route-arrow">&#8594;</div>
+                <div class="station">
+                    <div class="station-type">To:</div>
+                    <div class="station-name"><%= trip.endStation %></div>
+                </div>
+            </div>
+
             <div class="route-details">
                 <div class="detail-item">
-                    <span class="detail-icon" aria-hidden="true">&#9201;</span>
-                    <span>
-                        <span class="detail-label">Duration:</span>
-                        <span data-field="duration"></span>
-                    </span>
+                    <span class="detail-icon">&#128337;</span>
+                    <span><span class="detail-label">Duration:</span> <%= trip.duration %></span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-icon" aria-hidden="true">&#128207;</span>
-                    <span>
-                        <span class="detail-label">Distance:</span>
-                        <span data-field="distance"></span>
-                    </span>
+                    <span class="detail-icon">&#128205;</span>
+                    <span><span class="detail-label">Distance:</span> <%= trip.distance %>km</span>
                 </div>
                 <div class="detail-item">
-                    <!-- JS should append season modifier class here: season-spring | season-summer | season-autumn | season-winter -->
-                    <span class="season-badge" data-field="bestSeason"></span>
+                    <span class="season-badge season-<%= trip.bestSeason %>">
+                        Best in <%= trip.bestSeason %>
+                    </span>
                 </div>
             </div>
 
-            <!-- Grid Area: description -->
-            <p class="route-description" data-field="description"></p>
+            <div class="route-description">
+                <%= trip.description %>
+            </div>
 
-            <!-- Grid Area: highlights -->
             <div class="highlights">
-                <!-- JS should populate this container with <span class="highlight-tag">Tag</span> elements -->
-                <div class="highlights-list" data-field="highlights"></div>
+                <div class="highlights-list">
+                    <% trip.highlights.forEach(highlight => { %>
+                        <span class="highlight-tag"><%= highlight %></span>
+                    <% }); %>
+                </div>
             </div>
-
-            <!-- Grid Area: actions -->
+                
             <div class="route-actions">
-                <a class="view-details-btn" data-field="details-link">View Trip Details</a>
+                <a href="/trips/<%= trip.id %>" class="view-details-btn">
+                    View Details &amp; Book &#8594;
+                </a>
             </div>
-
-        </article>
-    </template>
-</section>
+        </div>
+    <% }); %>
+</div>
 
 <%- include('../partials/footer') %>
-
-   
