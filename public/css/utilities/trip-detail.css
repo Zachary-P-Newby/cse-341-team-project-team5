@@ -69,7 +69,7 @@ article.route-detail {
         .info-grid {
             display: grid;
             gap: var(--space-md);
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
 
             .info-item {
                 display: flex;
@@ -157,20 +157,6 @@ article.route-detail {
                         color: var(--clr-primary);
                     }
                 }
-            }
-        }
-
-        .route-stations-details{
-            gap: var(--space-md);
-            padding: var(--space-lg);
-            background-color: var(--clr-surface);
-            border: 1px solid var(--clr-border-light);
-            border-radius: var(--radius-md);
-
-
-
-            #start-station-details-article, #end-station-details-article{
-                display: none;
             }
         }
 
@@ -316,7 +302,6 @@ article.route-detail {
             grid-template-areas:
                 "info info"
                 "stations operations"
-                "station-details station-details"
                 "schedules schedules";
 
             .info-grid {
@@ -339,10 +324,6 @@ article.route-detail {
                         flex: 0 0 auto;
                     }
                 }
-            }
-
-            .route-stations-details{
-                grid-area: station-details;
             }
 
             .route-operating {

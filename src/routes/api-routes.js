@@ -1,9 +1,29 @@
+import express from "express";
+
+import { 
+    getAllBookings
+
+ } from "../controllers/bookings.js";
 // used ai
-import express from 'express';
 import { getAllTrips, getTripById } from '../controllers/trips.js';
 import { getAllStations, getStationById } from '../controllers/stations.js';
 
 const router = express.Router();
+
+/**
+ * @openapi
+ * /api/bookings:
+ *   get:
+ *     summary: Retrieve all bookings
+ *     tags:
+ *       - Bookings
+ *     responses:
+ *       200:
+ *         description: Bookings retrieved successfully
+ *       500:
+ *         description: Unable to retrieve bookings
+ */
+router.get("/bookings", getAllBookings);
 
 /**
  * @swagger

@@ -12,6 +12,22 @@
     }
   ],
   "paths": {
+    "/api/bookings": {
+      "get": {
+        "summary": "Retrieve all bookings",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookings retrieved successfully"
+          },
+          "500": {
+            "description": "Unable to retrieve bookings"
+          }
+        }
+      }
+    },
     "/api/trips": {
       "get": {
         "summary": "Retrieve all trips",

@@ -13,6 +13,7 @@ import mongoose from 'mongoose';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 
+
 const app = express();
 
 
@@ -47,6 +48,8 @@ mongoose.connect(process.env.MONGODB_URI)
   })
   .catch((err) => console.error('Database connection error:', err))
 
+//Create route for API endpoints
+app.use('/api', apiRoutes);
 // Catch requests that did not match a route.
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
@@ -68,4 +71,3 @@ app.use((err, req, res, next) => {
 });
 
 export default app;
-``

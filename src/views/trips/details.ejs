@@ -3,21 +3,21 @@
 <article class="route-detail">
     <div class="route-header">
         <div class="route-header-content">
-            <h1 class="route-name"><%= trip.name %></h1>
-            <p class="route-description"><%= trip.description %></p>
+            <h1 class="route-name"><%= details.name %></h1>
+            <p class="route-description"><%= details.description %></p>
             
-            <% if (trip.highlights && trip.highlights.length > 0) { %>
+            <% if (details.highlights && details.highlights.length > 0) { %>
             <div class="highlights">
-                <% trip.highlights.forEach(function(highlight) { %>
+                <% details.highlights.forEach(function(highlight) { %>
                 <span class="highlight-tag"><%= highlight %></span>
                 <% }); %>
             </div>
             <% } %>
         </div>
         
-        <% if (trip.imageUrl) { %>
+        <% if (details.imageUrl) { %>
         <div class="route-image">
-            <img src="<%= trip.imageUrl %>" alt="<%= trip.name %>">
+            <img src="<%= details.imageUrl %>" alt="<%= details.name %>">
         </div>
         <% } %>
     </div>
@@ -26,22 +26,22 @@
         <div class="info-grid">
             <div class="info-item">
                 <span class="info-label">Region</span>
-                <span class="info-value region-<%= trip.region %>"><%= trip.region.charAt(0).toUpperCase() + trip.region.slice(1) %></span>
+                <span class="info-value region-<%= details.region %>"><%= details.region.charAt(0).toUpperCase() + details.region.slice(1) %></span>
             </div>
             
             <div class="info-item">
                 <span class="info-label">Duration</span>
-                <span class="info-value"><%= trip.duration %></span>
+                <span class="info-value"><%= details.duration %></span>
             </div>
             
             <div class="info-item">
                 <span class="info-label">Distance</span>
-                <span class="info-value"><%= trip.distance %> km</span>
+                <span class="info-value"><%= details.distance %> km</span>
             </div>
             
             <div class="info-item">
                 <span class="info-label">Best Season</span>
-                <span class="info-value season-<%= trip.bestSeason %>"><%= trip.bestSeason.charAt(0).toUpperCase() + trip.bestSeason.slice(1) %></span>
+                <span class="info-value season-<%= details.bestSeason %>"><%= details.bestSeason.charAt(0).toUpperCase() + details.bestSeason.slice(1) %></span>
             </div>
         </div>
 
@@ -50,72 +50,29 @@
             <div class="stations">
                 <div class="station">
                     <span class="station-label">Start</span>
-                    <span class="station-name"><%= trip.startStation.charAt(0).toUpperCase() + trip.startStation.slice(1) %></span>
-                    <button id="start-details-button" class="station-details-button">Details</button>
+                    <span class="station-name"><%= details.startStation.charAt(0).toUpperCase() + details.startStation.slice(1) %></span>
                 </div>
                 <div class="station">
                     <span class="station-label">End</span>
-                    <span class="station-name"><%= trip.endStation.charAt(0).toUpperCase() + trip.endStation.slice(1) %></span>
-                    <button id="end-details-button" class="station-details-button">Details</button>
-                    
+                    <span class="station-name"><%= details.endStation.charAt(0).toUpperCase() + details.endStation.slice(1) %></span>
                 </div>
-                
-            </div>
-        </div>
-
-        <div class="route-stations-details" id="station-details">
-            <div class="stations">
-                    <article class="station-details-article" id="start-station-details-article">
-                        <%if(!startStationDetails || startStationDetails.error){ %>
-                            <h4>Station Data Unavailible</h4>
-                        <%} else {%>
-                            <strong><%= startStationDetails.name%></strong>
-                            <p><%= startStationDetails.prefecture %> Prefecture</p> - 
-                            <p><%= startStationDetails.description %></p>
-                            <strong>Facilities:</strong>
-                            <ul>
-                                <% startStationDetails.facilities.forEach(facility=>{ %>
-                                    <% facility = facility.replaceAll("_", " "); %>
-                                    <li><%= facility.charAt(0).toUpperCase() + facility.slice(1) %></li>
-                                <% })%>
-                            </ul>
-                        <%}%>
-                    </article>
-                    <article class="station-details-article" id="end-station-details-article">
-                        <%if(!endStationDetails || endStationDetails.error){ %>
-                            <h4>Station Data Unavailible</h4>
-                        <%} else {%>
-                            <strong><%= endStationDetails.name%></strong>
-                            <p><%= endStationDetails.prefecture %> Prefecture</p> - 
-                            <p><%= endStationDetails.description %></p>
-                            <strong>Facilities:</strong>
-                            <ul>
-                                <% endStationDetails.facilities.forEach(facility=>{ %>
-                                    <% facility = facility.replaceAll("_", " "); %>
-                                    <li><%=  facility.charAt(0).toUpperCase() + facility.slice(1) %></li>
-                                <% })%>
-                            </ul>
-                        <%}%>
-                        
-                        
-                    </article>
             </div>
         </div>
 
         <div class="route-operating">
             <h2>Operating Schedule</h2>
             <div class="months-grid">
-                <% trip.operatingMonths.forEach(function(month) { %>
+                <% details.operatingMonths.forEach(function(month) { %>
                 <span class="month-badge"><%= month %></span>
                 <% }); %>
             </div>
         </div>
 
-        <% if (trip.schedules && trip.schedules.length > 0) { %>
+        <% if (details.schedules && details.schedules.length > 0) { %>
         <div class="route-schedules">
             <h2>Available Schedules</h2>
             <div class="schedules-grid">
-                <% trip.schedules.forEach(function(schedule) { %>
+                <% details.schedules.forEach(function(schedule) { %>
                 <div class="schedule-card">
                     <div class="schedule-times">
                         <div class="time-block">
@@ -143,75 +100,3 @@
 </article>
 
 <%- include('../partials/footer') %>
-
-<script>
-
-    /*
-    Hide and show station details articles based on button press.
-    */
-
-    const startDetailsButton = document.getElementById("start-details-button");
-    const endDetailsButton = document.getElementById("end-details-button");
-    
-    const startStationDetailsArticle = document.getElementById("start-station-details-article");
-    const endStationDetailsArticle = document.getElementById("end-station-details-article")
-
-    let startStationDetailsIsShowing = false;
-    let endStationDetailsIsShowing = false;
-
-    function hideElement(element){
-        element.style.display = "none";
-    }
-
-    function showElement(element){
-        element.style.display = "block";
-    }
-
-    function handleStartStationDetailsClick(){
-        
-        if(startStationDetailsIsShowing){
-            hideElement(startStationDetailsArticle);
-            startStationDetailsIsShowing = false;
-            return;
-        }else{
-            
-            if(endStationDetailsIsShowing){
-                hideElement(endStationDetailsArticle);
-                endStationDetailsIsShowing = false;}
-
-            showElement(startStationDetailsArticle);
-
-            startStationDetailsIsShowing = true;
-            return;
-        }
-
-    }
-
-    function handleEndStationDetailsClick(){
-        
-        if(endStationDetailsIsShowing){
-
-            
-
-            hideElement(endStationDetailsArticle);
-            endStationDetailsIsShowing = false;
-            return;
-        }else{
-
-            if(startStationDetailsIsShowing){
-                hideElement(startStationDetailsArticle);
-                startStationDetailsIsShowing = false;
-            }
-
-            showElement(endStationDetailsArticle);
-            endStationDetailsArticle.style.display = "block";
-            endStationDetailsIsShowing = true;
-            return;
-        }
-    }
-
-    startDetailsButton.addEventListener("click", handleStartStationDetailsClick);
-    
-    endDetailsButton.addEventListener("click", handleEndStationDetailsClick);
-
-</script>
