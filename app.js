@@ -40,13 +40,6 @@ app.use('/', routes);
 app.use('/', apiRoutes);
 app.use('/', ejsRoutes);
 
-// Connect mongoose to use mongoose schemaa
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(3000, () => console.log('Server running on port 3000'));
-  })
-  .catch((err) => console.error('Database connection error:', err))
 
 //Create route for API endpoints
 app.use('/api', apiRoutes);
@@ -69,5 +62,17 @@ app.use((err, req, res, next) => {
 
     return res.status(status).render(`errors/${template}`, context);
 });
+
+async function startServer() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Connected to MongoDB');
+    app.listen(3000, () => console.log('Server running on port 3000'));
+  } catch (err) {
+    console.error('Database connection error:', err);
+  }
+}
+
+startServer();
 
 export default app;
