@@ -5,8 +5,11 @@ import {
   getTicketClassesForDay,
 } from "../controllers/ticket-classes.js";
 
-const router = Router();
 
+import { getAllTrips, getTripById } from '../controllers/trips.js';
+import { getAllStations, getStationById } from '../controllers/stations.js';
+
+const router = express.Router();
 /**
  * @openapi
  * /api/ticket-classes:
@@ -38,7 +41,7 @@ router.get("/ticket-classes", (req, res, next) => {
   return getAllTicketClasses(req, res, next);
 });
 
-export default router;
+
 
 import express from "express";
 
@@ -46,11 +49,7 @@ import {
     getAllBookings
 
  } from "../controllers/bookings.js";
-// used ai
-import { getAllTrips, getTripById } from '../controllers/trips.js';
-import { getAllStations, getStationById } from '../controllers/stations.js';
 
-const router = express.Router();
 
 /**
  * @openapi
