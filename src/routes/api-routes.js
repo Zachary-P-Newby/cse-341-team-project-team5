@@ -1,15 +1,16 @@
 import { Router } from 'express';
 import { trainsApi} from './trains.js';
 import { requireApiLogin, requireApiRole } from '../middleware/auth.js';
-import { 
-    getAllBookings
-
- } from "../controllers/bookings.js";
+import { getAllBookings } from "../controllers/bookings.js";
 // used ai
 import { getAllTrips, getTripById } from '../controllers/trips.js';
 import { getAllStations, getStationById } from '../controllers/stations.js';
+import { getAllTicketClasses,
+  getTicketClassesForDay,} from "../controllers/ticket-classes.js";
+import { getAllTrips, getTripById } from '../controllers/trips.js';
 
-const router = Router();
+
+const router = express.Router();
 
 
 // Trains API
@@ -22,16 +23,7 @@ router.get("/test-two", requireApiLogin, requireApiRole("admin"), (req, res)=>{r
 
 
 
-import {
-  getAllTicketClasses,
-  getTicketClassesForDay,
-} from "../controllers/ticket-classes.js";
 
-
-import { getAllTrips, getTripById } from '../controllers/trips.js';
-import { getAllStations, getStationById } from '../controllers/stations.js';
-
-const router = express.Router();
 /**
  * @openapi
  * /api/ticket-classes:
