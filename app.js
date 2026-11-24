@@ -9,6 +9,7 @@ import ejsRoutes from './src/routes/ejs-routes.js'
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json' with { type: 'json' };
 import mongoose from 'mongoose';
+import dashboardRoutes from './src/routes/ejs-routes.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
@@ -40,6 +41,14 @@ app.use('/', routes);
 app.use('/', apiRoutes);
 app.use('/', ejsRoutes);
 
+// Make logged-in user available to ALL EJS templates (including header.ejs)
+app.use((req, res, next) => {
+  res.locals.user = req.session?.user || req.user || null;
+  next();
+});
+
+// Register page routes
+app.use('/', dashboardRoutes);
 
 //Create route for API endpoints
 app.use('/api', apiRoutes);

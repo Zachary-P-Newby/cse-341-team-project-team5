@@ -1,6 +1,6 @@
 import { bookingPage, processBookingRequest } from '../controllers/bookings.js';
 import confirmationPage from './confirm.js';
-import listTripsPage from './list.js';
+import listTripsPage from './ejs-routes.js';
 import tripDetailsPage from './details.js';
 import { Router } from 'express';
 // cant use bookingPage twice.  If it is still needed, it needs to be called something else. Also there is o bookingPage in ticket-class
