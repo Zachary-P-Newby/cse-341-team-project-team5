@@ -1,9 +1,80 @@
+import { Router } from 'express';
+import { trainsApi} from './trains.js';
+import { requireApiLogin, requireApiRole } from '../middleware/auth.js';
+import { 
+    getAllBookings
+
+ } from "../controllers/bookings.js";
 // used ai
-import express from 'express';
 import { getAllTrips, getTripById } from '../controllers/trips.js';
 import { getAllStations, getStationById } from '../controllers/stations.js';
 
-const router = express.Router();
+const router = Router();
+
+
+// Trains API
+router.get('/trains', trainsApi);
+
+
+router.get("/test-one", requireApiLogin, (req, res)=>{return res.json({ message: "Test successful" });});
+router.get("/test-two", requireApiLogin, requireApiRole("admin"), (req, res)=>{return res.json({ message: "Test successful" });})
+
+
+
+
+import {
+  getAllTicketClasses,
+  getTicketClassesForDay,
+} from "../controllers/ticket-classes.js";
+
+
+/**
+ * @openapi
+ * /api/ticket-classes:
+ *   get:
+ *     summary: Get ticket classes
+ *     tags:
+ *       - Ticket Classes
+ *     parameters:
+ *       - in: query
+ *         name: day
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+ *         description: Optional weekday used to filter available ticket classes
+ *     responses:
+ *       200:
+ *         description: List of ticket classes
+ *       400:
+ *         description: Invalid weekday
+ *       500:
+ *         description: Failed to fetch ticket classes
+ */
+router.get("/ticket-classes", (req, res, next) => {
+  if (req.query.day) {
+    return getTicketClassesForDay(req, res, next);
+  }
+
+  return getAllTicketClasses(req, res, next);
+});
+
+
+
+/**
+ * @openapi
+ * /api/bookings:
+ *   get:
+ *     summary: Retrieve all bookings
+ *     tags:
+ *       - Bookings
+ *     responses:
+ *       200:
+ *         description: Bookings retrieved successfully
+ *       500:
+ *         description: Unable to retrieve bookings
+ */
+router.get("/bookings", getAllBookings);
 
 /**
  * @swagger
@@ -103,7 +174,7 @@ const router = express.Router();
  *                   type: string
  *                   example: Internal server error
  */
-router.get('/api/trips', getAllTrips);
+router.get('/trips', getAllTrips);
 
 /**
  * @swagger
@@ -148,7 +219,7 @@ router.get('/api/trips', getAllTrips);
  *                   type: string
  *                   example: Internal server error
  */
-router.get('/api/trips/:id', getTripById);
+router.get('/trips/:id', getTripById);
 
 // stations
 /**
@@ -165,7 +236,7 @@ router.get('/api/trips/:id', getTripById);
 *                   description: Internal Service Error.
 *
 */
-router.get('api/stations', getAllStations);
+router.get('/stations', getAllStations);
 
 /**
 * @swagger
@@ -189,6 +260,6 @@ router.get('api/stations', getAllStations);
 *               500:
 *                   description: Internal Service Error.
 */
-router.get("api/stations/:id", getStationById);
+router.get("/stations/:id", getStationById);
 
 export default router;
