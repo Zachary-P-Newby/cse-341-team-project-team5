@@ -1,6 +1,13 @@
 import { Router } from 'express';
 import { trainsApi} from './trains.js';
 import { requireApiLogin, requireApiRole } from '../middleware/auth.js';
+import { 
+    getAllBookings
+
+ } from "../controllers/bookings.js";
+// used ai
+import { getAllTrips, getTripById } from '../controllers/trips.js';
+import { getAllStations, getStationById } from '../controllers/stations.js';
 
 const router = Router();
 
@@ -11,5 +18,248 @@ router.get('/trains', trainsApi);
 
 router.get("/test-one", requireApiLogin, (req, res)=>{return res.json({ message: "Test successful" });});
 router.get("/test-two", requireApiLogin, requireApiRole("admin"), (req, res)=>{return res.json({ message: "Test successful" });})
+
+
+
+
+import {
+  getAllTicketClasses,
+  getTicketClassesForDay,
+} from "../controllers/ticket-classes.js";
+
+
+/**
+ * @openapi
+ * /api/ticket-classes:
+ *   get:
+ *     summary: Get ticket classes
+ *     tags:
+ *       - Ticket Classes
+ *     parameters:
+ *       - in: query
+ *         name: day
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]
+ *         description: Optional weekday used to filter available ticket classes
+ *     responses:
+ *       200:
+ *         description: List of ticket classes
+ *       400:
+ *         description: Invalid weekday
+ *       500:
+ *         description: Failed to fetch ticket classes
+ */
+router.get("/ticket-classes", (req, res, next) => {
+  if (req.query.day) {
+    return getTicketClassesForDay(req, res, next);
+  }
+
+  return getAllTicketClasses(req, res, next);
+});
+
+
+
+/**
+ * @openapi
+ * /api/bookings:
+ *   get:
+ *     summary: Retrieve all bookings
+ *     tags:
+ *       - Bookings
+ *     responses:
+ *       200:
+ *         description: Bookings retrieved successfully
+ *       500:
+ *         description: Unable to retrieve bookings
+ */
+router.get("/bookings", getAllBookings);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Trip:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - description
+ *         - region
+ *         - startStation
+ *         - endStation
+ *         - duration
+ *         - distance
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: Custom URL-friendly trip identifier
+ *           example: gorge-explorer
+ *         name:
+ *           type: string
+ *           description: Display name of the trip
+ *           example: Kurobe Gorge Explorer
+ *         description:
+ *           type: string
+ *           description: Detailed summary of the trip experience
+ *           example: Navigate through dramatic gorges and cross spectacular bridges in the Northern Alps.
+ *         region:
+ *           type: string
+ *           description: Geographic region of the trip
+ *           example: central
+ *         startStation:
+ *           type: string
+ *           description: Departure station identifier
+ *           example: unazuki
+ *         endStation:
+ *           type: string
+ *           description: Arrival station identifier
+ *           example: keyakidaira
+ *         duration:
+ *           type: string
+ *           description: Estimated travel duration
+ *           example: 1.5 hours
+ *         distance:
+ *           type: number
+ *           description: Total route distance in kilometers
+ *           example: 20
+ *         highlights:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Notable scenic attractions along the route
+ *           example: ["Kurobe Gorge", "Alpine bridges", "Waterfall views"]
+ *         bestSeason:
+ *           type: string
+ *           description: Recommended season for traveling
+ *           example: autumn
+ *         operatingMonths:
+ *           type: array
+ *           items:
+ *             type: integer
+ *           description: Months of the year the route operates (1-12)
+ *           example: [4, 5, 6, 7, 8, 9, 10, 11]
+ *         imageUrl:
+ *           type: string
+ *           description: Path to the route image asset
+ *           example: /images/routes/gorge-explorer.png
+ */
+
+/**
+ * @swagger
+ * /api/trips:
+ *   get:
+ *     summary: Retrieve all trips
+ *     description: Returns a JSON array of all available trips. Returns an empty array if no trips exist.
+ *     tags:
+ *       - Trips
+ *     responses:
+ *       200:
+ *         description: A list of trips
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Trip'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+router.get('/api/trips', getAllTrips);
+
+/**
+ * @swagger
+ * /api/trips/{id}:
+ *   get:
+ *     summary: Retrieve a single trip by ID
+ *     description: Returns a single trip matching the custom slug ID.
+ *     tags:
+ *       - Trips
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Custom trip identifier (e.g., gorge-explorer)
+ *     responses:
+ *       200:
+ *         description: Matching trip object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Trip'
+ *       404:
+ *         description: Trip not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Trip not found
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+router.get('/api/trips/:id', getTripById);
+
+// stations
+/**
+* @openapi
+*   /api/stations:
+*       get:
+*           summary: Gets all of the train stations.
+*           tags: 
+*               - Stations
+*           responses:
+*               200:
+*                   description: All Stations.
+*               500:
+*                   description: Internal Service Error.
+*
+*/
+router.get('api/stations', getAllStations);
+
+/**
+* @swagger
+*   /api/stations/{id}:
+*       get:
+*           summary: Gets a train by id
+*           parameters:
+*             - in: path
+*               name: id
+*               required: true
+*               schema:
+*                   type: string
+*               description: The Station ID.
+*           tags: 
+*             - Stations
+*           responses:
+*               200:
+*                   description: Station Found.
+*               404:
+*                   description: Station Not Found.
+*               500:
+*                   description: Internal Service Error.
+*/
+router.get("api/stations/:id", getStationById);
 
 export default router;
