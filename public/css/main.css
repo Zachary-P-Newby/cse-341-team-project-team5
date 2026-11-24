@@ -1,3 +1,4 @@
+
 @layer base, utilities, components, layout;
 
 @import 'base/reset.css' layer(base);
@@ -7,9 +8,12 @@
 @import 'utilities/booking.css' layer(utilities);
 @import 'utilities/confirmation.css' layer(utilities);
 @import 'utilities/home.css' layer(utilities);
+@import 'utilities/login.css' layer(utilities);
+@import 'utilities/registration.css' layer(utilities);
 @import 'utilities/trains.css' layer(utilities);
 @import 'utilities/trip-detail.css' layer(utilities);
 @import 'utilities/trips.css' layer(utilities);
+@import 'utilities/flash.css' layer(utilities);
 
 @import 'components/content-grid.css' layer(components);
 @import 'components/columns-grid.css' layer(components);

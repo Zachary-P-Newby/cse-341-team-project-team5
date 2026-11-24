@@ -1,8 +1,10 @@
 {
 	"name": "kizuna-rail-byui-demo",
 	"dependencies": {
+		"bcrypt": "^6.0.0",
 		"ejs": "^6.0.1",
 		"express": "^5.1.0",
+		"express-session": "^1.19.0",
 		"mongodb": "^7.5.0",
 		"mongoose": "^9.12.2",
 		"swagger-ui-express": "^5.0.1"
@@ -30,6 +32,7 @@
 		"ws": "^8.18.3"
 	},
 	"allowScripts": {
-		"mongodb-memory-server@11.3.0": true
+		"mongodb-memory-server@11.3.0": true,
+		"bcrypt@6.0.0": true
 	}
 }

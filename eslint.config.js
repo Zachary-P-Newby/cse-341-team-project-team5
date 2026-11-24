@@ -17,7 +17,7 @@ export default [
       'no-var': 'error',
       'prefer-const': 'error',
       'arrow-body-style': 'off',
-      'consistent-return': 'error',
+      'consistent-return': 'off',
       'no-restricted-syntax': [
         'error',
         {

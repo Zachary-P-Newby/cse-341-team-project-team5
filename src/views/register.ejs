@@ -1,0 +1,29 @@
+<!--register.ejs-->
+<%- include('./partials/header') %>
+
+<div >
+    <section>
+        <h1>Sign Up</h1>
+    </section>
+    
+
+    <div class="form-container">
+        <form id="registration-form" action="/register" method="post">
+            <label for="name" aria-label="name">Provide your Username:</label>
+            <input type="text" name="name" id="name" maxlength="100" minlength="5" class="name-input">
+
+            <label for="email" aria-label="email">Email:</label>
+            <input type="text" name="email" id="email" maxlength="250" minlength="5" class="email-input">
+
+            <label for="password" aria-label="password">Enter a Strong Password:</label>
+            <input type="password" name="password" id="password" class="password-input">
+            
+            <label for="confirmPassword" aria-label="confirmPassword">Confirm Password:</label>
+            <input type="password" name="confirmPassword" id="confirmPassword" class="password-input">
+        
+            
+            <button id="registration-form-submit-btn" class="form-submit-btn" name="submit-button">Join</button>
+        </form>
+    </div>
+    
+</div>
