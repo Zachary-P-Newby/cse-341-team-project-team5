@@ -43,9 +43,13 @@ router.get('/user', (req, res) => {
 
 // right after verifing password and saving user to the session
 // Inside your POST /login handler after authentication succeeds:
-if (user.role === 'admin' || user.isAdmin) { // Match whichever field your User model uses
-  return res.redirect('/admin/dashboard'); // Match your team's existing admin dashboard URL
-}
+router.post('/login', async (req, res) => {
+  // ... your existing authentication/session logic ...
 
-return res.redirect('/dashboard');
+  if (user.role === 'admin' || user.isAdmin) {
+    return res.redirect('/admin/dashboard');
+  }
+
+  return res.redirect('/dashboard');
+});
 export default router;
