@@ -43,4 +43,15 @@ router.use('/trips', railTripsRouter);
 // Test 500 error page
 router.get('/500', testErrorPage);
 
+// Protected User Administration Page
+router.get(
+    "/users-admin",
+    requirePageLogin,
+    (req, res) => {
+        return res.render("users/admin", {
+            title: "User Administration"
+        });
+    }
+);
+
 export default router;

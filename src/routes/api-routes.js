@@ -1,5 +1,12 @@
 import { Router } from 'express';
 import { trainsApi} from './trains.js';
+
+import {
+  getUsers,
+  updateUserById,
+  deleteUserById,
+} from "../controllers/user-admin.js";
+
 import { requireApiLogin, requireApiRole } from '../middleware/auth.js';
 import { 
     getAllBookings
@@ -261,5 +268,93 @@ router.get('/stations', getAllStations);
 *                   description: Internal Service Error.
 */
 router.get("/stations/:id", getStationById);
+
+
+// USER ADMIN API
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get users visible to the logged-in user
+ *     tags:
+ *       - Users
+ *     responses:
+ *       200:
+ *         description: Users retrieved successfully
+ *       401:
+ *         description: Authentication required
+ *       500:
+ *         description: Server error
+ */
+router.get("/users", requireApiLogin, getUsers);
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update a user
+ *     tags:
+ *       - Users
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Authentication required
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ *       409:
+ *         description: Email already in use
+ */
+router.put("/users/:id", requireApiLogin, updateUserById);
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   delete:
+ *     summary: Delete a user
+ *     tags:
+ *       - Users
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: User deleted
+ *       401:
+ *         description: Authentication required
+ *       403:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
+router.delete("/users/:id", requireApiLogin, deleteUserById);
+
 
 export default router;

@@ -1,0 +1,183 @@
+
+<%- include('../partials/header') %>
+
+<section class="content">
+    <h1>User Administration</h1>
+
+    <p>
+        Manage user accounts. You can only manage accounts
+        you are authorized to access.
+    </p>
+
+    <div id="users-message" role="status"></div>
+
+    <div id="users-container">
+        <p>Loading users...</p>
+    </div>
+</section>
+
+<script>
+    const usersContainer = document.getElementById("users-container");
+    const message = document.getElementById("users-message");
+
+    function showMessage(text, isError = false) {
+        message.textContent = text;
+        message.style.color = isError ? "red" : "green";
+    }
+
+    async function loadUsers() {
+        usersContainer.replaceChildren();
+
+        try {
+            const response = await fetch("/api/users");
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve users");
+            }
+
+            const users = await response.json();
+
+            if (users.length === 0) {
+                usersContainer.textContent = "No users found.";
+                return;
+            }
+
+            users.forEach((user) => {
+                const card = document.createElement("article");
+                card.className = "user-card";
+
+                const heading = document.createElement("h2");
+                heading.textContent = user.name;
+
+                const email = document.createElement("p");
+                email.textContent = `Email: ${user.email}`;
+
+                const role = document.createElement("p");
+                role.textContent = `Role: ${user.role?.name || "Unknown"}`;
+
+                const id = document.createElement("p");
+                id.textContent = `User ID: ${user._id}`;
+
+                const form = document.createElement("form");
+
+                const nameLabel = document.createElement("label");
+                nameLabel.textContent = "Name";
+
+                const nameInput = document.createElement("input");
+                nameInput.type = "text";
+                nameInput.value = user.name;
+                nameInput.required = true;
+
+                nameLabel.appendChild(nameInput);
+
+                const emailLabel = document.createElement("label");
+                emailLabel.textContent = "Email";
+
+                const emailInput = document.createElement("input");
+                emailInput.type = "email";
+                emailInput.value = user.email;
+                emailInput.required = true;
+
+                emailLabel.appendChild(emailInput);
+
+                const updateButton = document.createElement("button");
+                updateButton.type = "submit";
+                updateButton.textContent = "Update User";
+
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.textContent = "Delete User";
+
+                form.append(
+                    nameLabel,
+                    emailLabel,
+                    updateButton,
+                    deleteButton
+                );
+
+                form.addEventListener("submit", async (event) => {
+                    event.preventDefault();
+
+                    try {
+                        const updateResponse = await fetch(
+                            `/api/users/${user._id}`,
+                            {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    name: nameInput.value,
+                                    email: emailInput.value,
+                                }),
+                            }
+                        );
+
+                        const result = await updateResponse.json();
+
+                        if (!updateResponse.ok) {
+                            throw new Error(result.message);
+                        }
+
+                        showMessage("User updated successfully.");
+                        await loadUsers();
+                    } catch (error) {
+                        showMessage(error.message, true);
+                    }
+                });
+
+                deleteButton.addEventListener("click", async () => {
+                    if (!confirm(`Delete ${user.name}?`)) {
+                        return;
+                    }
+
+                    try {
+                        const deleteResponse = await fetch(
+                            `/api/users/${user._id}`,
+                            {
+                                method: "DELETE",
+                            }
+                        );
+
+                        const result = await deleteResponse.json();
+
+                        if (!deleteResponse.ok) {
+                            throw new Error(result.message);
+                        }
+
+                        // Deleting your own account ends your session.
+                        if (deleteResponse.redirected) {
+                            window.location.href = deleteResponse.url;
+                            return;
+                        }
+
+                        showMessage("User deleted successfully.");
+                        await loadUsers();
+
+                    } catch (error) {
+                        showMessage(error.message, true);
+                    }
+                });
+
+                card.append(
+                    heading,
+                    email,
+                    role,
+                    id,
+                    form
+                );
+
+                usersContainer.appendChild(card);
+            });
+
+        } catch (error) {
+            console.error(error);
+            showMessage(error.message, true);
+            usersContainer.textContent = "Unable to load users.";
+        }
+    }
+
+    loadUsers();
+</script>
+
+<%- include('../partials/footer') %>
