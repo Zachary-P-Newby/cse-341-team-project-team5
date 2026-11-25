@@ -38,6 +38,14 @@ app.use(session({
     cookie: {maxAge: 60 * 60 * 1000} //session expires after 1 hour of inactivity
 }));
 
+// Make login information available to all EJS views.
+app.use((req, res, next) => {
+    res.locals.isUserLoggedIn = Boolean(req.session?.user);
+    res.locals.currentUser = req.session?.user || null;
+
+    next();
+});
+
 
 app.use(loadSessionUser);
 
