@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
     <main class="container">
-        <h1>Welcome, <%= user?.displayName || user?.email || 'Traveler' %>!</h1>
+        <h1>Welcome, <%= user?.name || user?.displayName || user?.email || 'Traveler' %>!</h1>
 
         <section class="admin-links">
             <h2>Quick Navigation</h2>

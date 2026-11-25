@@ -48,7 +48,7 @@ router.get("/admin/dashboard", requirePageLogin, requirePageRole("admin"), admin
 // test code remove when checking in 
 router.get(['/dashboard', '/standard-user/dashboard'], (req, res) => {
   const testUser = {
-    displayName: 'Giaso',
+    name: 'Giaso',
     email: 'gia@example.com', // Make sure this email matches a booking in MongoDB
     role: 'standard',
   };
