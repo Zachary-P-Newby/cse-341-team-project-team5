@@ -67,7 +67,7 @@
             <div class="stations">
                     <article class="station-details-article" id="start-station-details-article">
                         <%if(!startStationDetails || startStationDetails.error){ %>
-                            <h4>Station Data Unavailible</h4>
+                            <h4>Station Data Unavailable</h4>
                         <%} else {%>
                             <strong><%= startStationDetails.name%></strong>
                             <p><%= startStationDetails.prefecture %> Prefecture</p> - 
@@ -83,7 +83,7 @@
                     </article>
                     <article class="station-details-article" id="end-station-details-article">
                         <%if(!endStationDetails || endStationDetails.error){ %>
-                            <h4>Station Data Unavailible</h4>
+                            <h4>Station Data Unavailable</h4>
                         <%} else {%>
                             <strong><%= endStationDetails.name%></strong>
                             <p><%= endStationDetails.prefecture %> Prefecture</p> - 
