@@ -53,13 +53,13 @@ const renderTripDetailsPage = async (req, res, next) => {
 
         if (!startStationDetails) {
             startStationDetails = {
-                error: "Station Unavailible"
+                error: "Station Unavailable"
             }
         }
 
         if (!endStationDetails) {
             endStationDetails = {
-                error: "Station Unavailible"
+                error: "Station Unavailable"
             }
         }
 
