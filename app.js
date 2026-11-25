@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 import { loadSessionUser } from './src/middleware/auth.js';
 import flash from './src/middleware/flash.js';
+import { connectToMongoose } from './src/db/connect.js';
 
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
@@ -74,7 +75,7 @@ app.use('/', routes);
 
 // Connect mongoose to use mongoose schemas.
 try {
-  await mongoose.connect(process.env.MONGODB_URI);
+  await connectToMongoose();
   console.log('Connected to MongoDB');
   app.listen(3000, () => console.log('Server running on port 3000'));
 } catch (err) {
