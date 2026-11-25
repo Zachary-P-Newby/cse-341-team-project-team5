@@ -1,4 +1,4 @@
-<%- include('./partials/header') %>
+<%- include('../partials/header') %>
     <main class="container">
         <h1>Welcome, <%= user?.displayName || user?.email || 'Traveler' %>!</h1>
 
@@ -39,13 +39,7 @@
 
                 // Filter bookings where userEmail matches any passenger's email
                 const matchingBookings = bookings.filter((booking) => {
-                    if (!Array.isArray(booking.passengers)) return false;
-
-                    return booking.passengers.some((passenger) => {
-                        // Supports both array of email strings OR array of passenger objects
-                        const email = typeof passenger === 'string' ? passenger : passenger?.email;
-                        return email && email.trim().toLowerCase() === userEmail;
-                    });
+                    return booking.passengerEmail && booking.passengerEmail.trim().toLowerCase() === userEmail;
                 });
 
                 if (matchingBookings.length === 0) {
@@ -56,10 +50,7 @@
                 const list = document.createElement('ul');
                 matchingBookings.forEach((booking) => {
                     const item = document.createElement('li');
-                    // Adjust property names below if your booking schema uses different field names
-                    const tripTitle = booking.tripName || booking.destination || booking._id || 'Booking';
-                    const status = booking.status ? ` (${booking.status})` : '';
-                    item.textContent = `${tripTitle}${status}`;
+                    item.textContent = `Booking #${booking.id} — ${booking.passengerFirstName} ${booking.passengerLastName} (${booking.createdAt})`;
                     list.appendChild(item);
                 });
 
@@ -74,4 +65,4 @@
         document.addEventListener('DOMContentLoaded', loadUserBookings);
     </script>
 
-    <%- include('./partials/footer') %>
+    <%- include('../partials/footer') %>

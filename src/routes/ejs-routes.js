@@ -37,6 +37,46 @@ router.get("/account", requirePageLogin, accountPage)
 //admin
 router.get("/admin/dashboard", requirePageLogin, requirePageRole("admin"), adminDashboard);
 
+// Standard user dashboard blocked out for testing:
+// router.get(['/dashboard', '/standard-user/dashboard'], requirePageLogin, (req, res) => {
+//   res.render('standard-user/dashboard', {
+//     title: 'Dashboard',
+//     user: req.user || req.session?.user,
+//   });
+// });
+
+// test code remove when checking in 
+router.get(['/dashboard', '/standard-user/dashboard'], (req, res) => {
+  const testUser = {
+    displayName: 'Giaso',
+    email: 'gia@example.com', // Make sure this email matches a booking in MongoDB
+    role: 'standard',
+  };
+
+  res.render('standard-user/dashboard', {
+    title: 'Dashboard',
+    user: req.user || req.session?.user || testUser,
+  });
+});
+// End test section
+
+
+
+// Admin pages
+router.get('/booking', requirePageLogin, requirePageRole('admin'), (req, res) => {
+  res.render('admin/booking', {
+    title: 'Booking Admin',
+    user: req.user || req.session?.user,
+  });
+});
+
+router.get('/user', requirePageLogin, requirePageRole('admin'), (req, res) => {
+  res.render('admin/user', {
+    title: 'User Admin',
+    user: req.user || req.session?.user,
+  });
+});
+
 // Rail trips
 router.use('/trips', railTripsRouter);
 

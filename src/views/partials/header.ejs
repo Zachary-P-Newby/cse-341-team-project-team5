@@ -35,12 +35,19 @@
                     <span></span>
                 </label>
                 <ul>
+                    <li><a href="/">Home</a></li>
                     <li><a href="/trips">Trips</a></li>
                     <li><a href="/trains">Trains</a></li>
                     <li><a href="/about">About</a></li>
                 <% if (isUserLoggedIn) { %>
+                    <li>
+                        <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/standard-user/dashboard' %>">
+                            Dashboard
+                        </a>
+                    </li>
                     <li><a href="/account">Account</a></li>
                     <li><a href="/logout">Logout</a></li>
+                
             <% ;} else { %>
                     <li><a href="/register">Register</a></li>
                     <li><a href="/login">Login</a></li>
