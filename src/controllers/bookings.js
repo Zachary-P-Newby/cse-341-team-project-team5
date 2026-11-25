@@ -55,11 +55,13 @@ const bookingPage = async (req, res) => {
         amenities: ticketClass.amenities,
         description: ticketClass.description
     }));
+    const tripDistance = trip.distance
 
     res.render('trips/book', {
         title: 'Book Trip',
         schedule,
-        ticketOptions
+        ticketOptions,
+        tripDistance
     });
 };
 

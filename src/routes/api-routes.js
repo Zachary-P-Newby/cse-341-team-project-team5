@@ -174,7 +174,7 @@ router.get("/bookings", getAllBookings);
  *                   type: string
  *                   example: Internal server error
  */
-router.get('/api/trips', getAllTrips);
+router.get('/trips', getAllTrips);
 
 /**
  * @swagger
@@ -219,7 +219,7 @@ router.get('/api/trips', getAllTrips);
  *                   type: string
  *                   example: Internal server error
  */
-router.get('/api/trips/:id', getTripById);
+router.get('/trips/:id', getTripById);
 
 // stations
 /**
@@ -236,13 +236,13 @@ router.get('/api/trips/:id', getTripById);
 *                   description: Internal Service Error.
 *
 */
-router.get('api/stations', getAllStations);
+router.get('/stations', getAllStations);
 
 /**
 * @swagger
 *   /api/stations/{id}:
 *       get:
-*           summary: Gets a train by id
+*           summary: Gets a station by id
 *           parameters:
 *             - in: path
 *               name: id
@@ -260,6 +260,6 @@ router.get('api/stations', getAllStations);
 *               500:
 *                   description: Internal Service Error.
 */
-router.get("api/stations/:id", getStationById);
+router.get("/stations/:id", getStationById);
 
 export default router;

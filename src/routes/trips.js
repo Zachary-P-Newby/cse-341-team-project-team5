@@ -1,9 +1,8 @@
 import { bookingPage, processBookingRequest } from '../controllers/bookings.js';
 import confirmationPage from './confirm.js';
 import listTripsPage from './list.js';
-import tripDetailsPage from './details.js';
 import { Router } from 'express';
-import { bookingPage } from "../controllers/ticket-classes.js";
+import { renderTripDetailsPage } from '../controllers/trips.js';
 
 
 const router = Router();
@@ -12,7 +11,7 @@ const router = Router();
 router.get('/', listTripsPage);
 
 // Trip details page
-router.get('/:tripId', tripDetailsPage);
+router.get('/:id', renderTripDetailsPage );
 
 // Book ticket 
 router.get('/booking/:scheduleId', bookingPage);

@@ -70,8 +70,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 app.use(globalMiddleware);
 app.use('/', routes);
-app.use('/', apiRoutes);
-app.use('/', ejsRoutes);
+
 
 // Connect mongoose to use mongoose schemas.
 try {
@@ -82,8 +81,7 @@ try {
   console.error('Database connection error:', err);
 }
 
-//Create route for API endpoints
-app.use('/api', apiRoutes);
+
 // Catch requests that did not match a route.
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
