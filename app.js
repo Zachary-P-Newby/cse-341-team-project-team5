@@ -75,7 +75,7 @@ app.use('/', routes);
 
 // Connect mongoose to use mongoose schemas.
 try {
-    await connectToMongoose();
+  await connectToMongoose();
   console.log('Connected to MongoDB');
   app.listen(3000, () => console.log('Server running on port 3000'));
 } catch (err) {
