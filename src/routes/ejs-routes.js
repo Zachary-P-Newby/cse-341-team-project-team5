@@ -37,30 +37,13 @@ router.get("/account", requirePageLogin, accountPage)
 //admin
 router.get("/admin/dashboard", requirePageLogin, requirePageRole("admin"), adminDashboard);
 
-// Standard user dashboard blocked out for testing:
-// router.get(['/dashboard', '/standard-user/dashboard'], requirePageLogin, (req, res) => {
-//   res.render('standard-user/dashboard', {
-//     title: 'Dashboard',
-//     user: req.user || req.session?.user,
-//   });
-// });
-
-// test code remove when checking in 
-router.get(['/dashboard', '/standard-user/dashboard'], (req, res) => {
-  const testUser = {
-    name: 'Giaso',
-    email: 'gia@example.com', // Make sure this email matches a booking in MongoDB
-    role: 'standard',
-  };
-
+// Standard user dashboard
+router.get(['/dashboard', '/standard-user/dashboard'], requirePageLogin, (req, res) => {
   res.render('standard-user/dashboard', {
     title: 'Dashboard',
-    user: req.user || req.session?.user || testUser,
+    user: req.user || req.session?.user,
   });
 });
-// End test section
-
-
 
 // Admin pages
 router.get('/booking', requirePageLogin, requirePageRole('admin'), (req, res) => {
