@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+    <main class="container">
+        <h1>Welcome, <%= user?.name || user?.displayName || user?.email || 'Traveler' %>!</h1>
+
+        <section class="admin-links">
+            <h2>Quick Navigation</h2>
+            <ul>
+                <li><a href="/booking">Booking Admin</a></li>
+                <li><a href="/user">User Admin</a></li>
+            </ul>
+        </section>
+
+        <section class="user-bookings">
+            <h2>Your Bookings</h2>
+            <div id="bookings-container" data-user-email="<%= user?.email || '' %>">
+                <p>Loading your bookings...</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        async function loadUserBookings() {
+            const container = document.getElementById('bookings-container');
+            const userEmail = container.dataset.userEmail.trim().toLowerCase();
+
+            if (!userEmail) {
+                container.innerHTML = '<p>No bookings found</p>';
+                return;
+            }
+
+            try {
+                // Matches app.use('/api', apiRoutes) + router.get('/bookings', getAllBookings)
+                const response = await fetch('/api/bookings');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch bookings');
+                }
+
+                const bookings = await response.json();
+
+                // Filter bookings where userEmail matches any passenger's email
+                const matchingBookings = bookings.filter((booking) => {
+                    return booking.passengerEmail && booking.passengerEmail.trim().toLowerCase() === userEmail;
+                });
+
+                if (matchingBookings.length === 0) {
+                    container.innerHTML = '<p>No bookings found</p>';
+                    return;
+                }
+
+                const list = document.createElement('ul');
+                matchingBookings.forEach((booking) => {
+                    const item = document.createElement('li');
+                    item.textContent = `Booking #${booking.id} — ${booking.passengerFirstName} ${booking.passengerLastName} (${booking.createdAt})`;
+                    list.appendChild(item);
+                });
+
+                container.innerHTML = '';
+                container.appendChild(list);
+            } catch (err) {
+                console.error('Error loading bookings:', err);
+                container.innerHTML = '<p>Unable to load bookings right now.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUserBookings);
+    </script>
+
+    <%- include('../partials/footer') %>

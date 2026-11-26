@@ -1,3 +1,4 @@
+// Don't add things to this file.  It was deleted and then came back.  It should not be here. If you want to, you can move the code to ejs-routes
 import { getDb } from '../db/connect.js';
 
 export default async (req, res) => {

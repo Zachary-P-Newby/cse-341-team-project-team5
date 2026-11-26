@@ -76,6 +76,7 @@ router.get("/ticket-classes", (req, res, next) => {
  */
 router.get("/bookings", getAllBookings);
 
+
 /**
  * @swagger
  * components:
