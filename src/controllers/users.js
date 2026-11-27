@@ -65,13 +65,21 @@ export async function processLoginForm(req, res){
         }
 
         // In the successful-login branch of the login controller
+         const roleName = user.role?.name || user.role;
+        
         req.session.user = {
         id: user._id.toString(),
         name: user.name,
-        role: user.role.name // for example, 'customer' or 'admin'
+        email: user.email,
+       role: roleName // for example, 'customer' or 'admin'
         };
-        req.flash("success","Logged In");
-        return res.redirect('/');
+        req.flash("success", "Logged In");
+
+        if (roleName === 'admin') {
+            return res.redirect('/admin/dashboard');
+        } else {
+            return res.redirect('/standard-user/dashboard');
+        }
 
     }catch(error){
         console.error("Error during login:", error);

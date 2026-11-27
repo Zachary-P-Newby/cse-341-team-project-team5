@@ -37,6 +37,29 @@ router.get("/account", requirePageLogin, accountPage)
 //admin
 router.get("/admin/dashboard", requirePageLogin, requirePageRole("admin"), adminDashboard);
 
+// Standard user dashboard
+router.get(['/dashboard', '/standard-user/dashboard'], requirePageLogin, (req, res) => {
+  res.render('standard-user/dashboard', {
+    title: 'Dashboard',
+    user: req.user || req.session?.user,
+  });
+});
+
+// Admin pages
+router.get('/booking', requirePageLogin, requirePageRole('admin'), (req, res) => {
+  res.render('admin/booking', {
+    title: 'Booking Admin',
+    user: req.user || req.session?.user,
+  });
+});
+
+router.get('/user', requirePageLogin, requirePageRole('admin'), (req, res) => {
+  res.render('admin/user', {
+    title: 'User Admin',
+    user: req.user || req.session?.user,
+  });
+});
+
 // Rail trips
 router.use('/trips', railTripsRouter);
 
