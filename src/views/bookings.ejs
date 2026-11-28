@@ -1,66 +1,166 @@
 
 <%- include('./partials/header') %>
 
-<h1>Bookings Administration</h1>
+<main class="bookings-admin">
+    <h1>Bookings Administration</h1>
 
-<div id="bookings-container"></div>
+    <p id="booking-status" aria-live="polite">
+        Loading bookings...
+    </p>
+
+    <div id="bookings-container"></div>
+
+    <div class="pagination-controls">
+        <button
+            type="button"
+            id="previous-page"
+            disabled
+        >
+            Previous
+        </button>
+
+        <span id="page-information">
+            Page 1
+        </span>
+
+        <button
+            type="button"
+            id="next-page"
+            disabled
+        >
+            Next
+        </button>
+    </div>
+</main>
 
 <template id="booking-template">
-    <div class="booking-card">
+    <article class="booking-card">
         <h3 class="passenger-name"></h3>
         <p class="passenger-email"></p>
         <p class="passenger-phone"></p>
+        <p class="ticket-class"></p>
         <p class="booking-date"></p>
-    </div>
+    </article>
 </template>
 
 <script>
-    const container = document.getElementById('bookings-container');
-    const template = document.getElementById('booking-template');
+    const container = document.getElementById(
+        "bookings-container"
+    );
 
-    const getAllBookings = async () => {
+    const template = document.getElementById(
+        "booking-template"
+    );
+
+    const status = document.getElementById(
+        "booking-status"
+    );
+
+    const previousButton = document.getElementById(
+        "previous-page"
+    );
+
+    const nextButton = document.getElementById(
+        "next-page"
+    );
+
+    const pageInformation = document.getElementById(
+        "page-information"
+    );
+
+    let currentPage = 1;
+    const limit = 10;
+
+    async function loadBookings(page = 1) {
+        status.textContent = "Loading bookings...";
+        container.replaceChildren();
+
         try {
-            const response = await fetch('/api/bookings');
+            const response = await fetch(
+                `/api/bookings?page=${page}&limit=${limit}`
+            );
 
             if (!response.ok) {
-                throw new Error('Failed to retrieve bookings');
+                throw new Error("Unable to retrieve bookings.");
             }
 
-            const bookings = await response.json();
+            const result = await response.json();
 
-            if (bookings.length === 0) {
-                container.textContent = 'No bookings found.';
-                return;
+            currentPage = result.pagination.page;
+
+            if (result.data.length === 0) {
+                status.textContent = "No bookings found.";
+            } else {
+                status.textContent =
+                    `Showing ${result.data.length} of ${result.pagination.totalItems} bookings.`;
             }
 
-            bookings.forEach((booking) => {
+            result.data.forEach((booking) => {
+                const card = template.content.cloneNode(true);
 
-                // Clone the template
-                const bookingCard = template.content.cloneNode(true);
+                const passengers = booking.passengers || [];
 
-                // Get elements from the cloned template
-                bookingCard.querySelector('.passenger-name').textContent =
-                    `Passenger Names: ${booking.passengerFirstName} ${booking.passengerLastName}`;
+                const passengerNames = passengers.length
+                    ? passengers.map(p =>
+                        `${p.firstName || ""} ${p.lastName || ""}`.trim()
+                    ).join(", ")
+                    : `${booking.passengerFirstName || ""} ${booking.passengerLastName || ""}`.trim();
 
-                bookingCard.querySelector('.passenger-email').textContent =
-                    `Email: ${booking.passengerEmail}`;
+                const passengerEmails = passengers.length
+                    ? passengers.map(p => p.email).filter(Boolean).join(", ")
+                    : booking.passengerEmail || "Not provided";
 
-                bookingCard.querySelector('.passenger-phone').textContent =
-                    `Phone: ${booking.passengerPhone}`;
+                const passengerPhones = passengers.length
+                    ? passengers.map(p => p.phone).filter(Boolean).join(", ")
+                    : booking.passengerPhone || "Not provided";
 
-                bookingCard.querySelector('.booking-date').textContent =
-                    `Date: ${booking.createdAt}`;
+                card.querySelector(".passenger-name").textContent =
+                    `Passengers: ${passengerNames || "Not provided"}`;
 
-                // Add the cloned template to the page
-                container.appendChild(bookingCard);
+                card.querySelector(".passenger-email").textContent =
+                    `Email: ${passengerEmails}`;
+
+                card.querySelector(".passenger-phone").textContent =
+                    `Phone: ${passengerPhones}`;
+
+                card.querySelector(".ticket-class").textContent =
+                    `Ticket Class: ${booking.ticketClass || "Not recorded"}`;
+
+                card.querySelector(".booking-date").textContent =
+                    `Date: ${booking.createdAt
+                        ? new Date(booking.createdAt).toLocaleString()
+                        : "Not available"}`;
+
+                container.appendChild(card);
             });
 
-        } catch (err) {
-            console.error(err);
-            container.textContent = 'Unable to load bookings.';
-        }
-    };
+            pageInformation.textContent =
+                `Page ${result.pagination.page} of ${result.pagination.totalPages}`;
 
-    getAllBookings();
+            previousButton.disabled =
+                !result.pagination.hasPreviousPage;
+
+            nextButton.disabled =
+                !result.pagination.hasNextPage;
+
+        } catch (error) {
+            console.error(error);
+            status.textContent = "Unable to load bookings.";
+        }
+    }
+
+    previousButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+            loadBookings(currentPage - 1);
+        }
+    });
+
+    nextButton.addEventListener("click", () => {
+        loadBookings(currentPage + 1);
+    });
+
+    loadBookings();
 </script>
+
 <%- include('./partials/footer') %>
+

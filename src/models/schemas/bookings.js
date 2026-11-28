@@ -1,39 +1,51 @@
+
 import mongoose from "mongoose";
+
+const passengerSchema = new mongoose.Schema(
+  {
+    firstName: { type: String, trim: true },
+    lastName: { type: String, trim: true },
+    email: { type: String, trim: true },
+    phone: { type: String, trim: true },
+  },
+  { _id: false }
+);
 
 const bookingSchema = new mongoose.Schema(
   {
     id: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     createdAt: {
-        type: String,
-        required: true
+      type: Date,
+      default: Date.now,
+      required: true,
     },
-    passengerFirstName:{
-        type: String,
-        required: true,
-        trim: true
+    scheduleId: String,
+    tripId: String,
+    ticketClass: {
+      type: String,
+      enum: ["standard", "premium", "first"],
     },
-    passengerLastName:{
-        type: String,
-        required: true,
-        trim: true
-    },
-    passengerEmail:{
-        type: String,
-        required: true,
+    selectedDay: String,
+    passengers: {
+      type: [passengerSchema],
+      default: [],
     },
 
-    passengerPhone:{
-        type: String,
-        required: true,
-    },
+    // Legacy fields: preserve compatibility with older records.
+    passengerFirstName: String,
+    passengerLastName: String,
+    passengerEmail: String,
+    passengerPhone: String,
+  },
+  {
+    collection: "bookings",
+  }
+);
 
-});
+const Booking = mongoose.model("Booking", bookingSchema);
 
-
-const booking = mongoose.model("Booking", bookingSchema);
-
-export default booking;
+export default Booking;

@@ -5,6 +5,7 @@ import {processRegisterForm, processLoginForm, processLogout} from '../controlle
 import { adminDashboard, accountPage } from './accounts.js';
 import { homePage, aboutPage, testErrorPage, registerPage, loginPage } from './index.js';
 import { requirePageLogin, requirePageRole } from '../middleware/auth.js';
+import { bookingsAdminPage } from "../controllers/bookings.js";
 
 const router = Router();
 
@@ -42,5 +43,11 @@ router.use('/trips', railTripsRouter);
 
 // Test 500 error page
 router.get('/500', testErrorPage);
+
+// Booking administration page
+router.get("/bookings", requirePageLogin, bookingsAdminPage);
+
+// Keep the previous Week 03 URL working.
+router.get("/bookings-admin", requirePageLogin, bookingsAdminPage);
 
 export default router;

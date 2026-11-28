@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { trainsApi} from './trains.js';
 import { requireApiLogin, requireApiRole } from '../middleware/auth.js';
-import { 
-    getAllBookings
-
- } from "../controllers/bookings.js";
+import {
+  getAllBookings,
+  getPaginatedBookingsController,
+} from "../controllers/bookings.js";
 // used ai
 import { getAllTrips, getTripById } from '../controllers/trips.js';
 import { getAllStations, getStationById } from '../controllers/stations.js';
@@ -61,20 +61,53 @@ router.get("/ticket-classes", (req, res, next) => {
 
 
 
+
 /**
- * @openapi
+ * @swagger
  * /api/bookings:
  *   get:
- *     summary: Retrieve all bookings
+ *     summary: Retrieve paginated bookings
+ *     description: Returns bookings in pages of 10 by default, sorted by booking date.
  *     tags:
  *       - Bookings
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of bookings per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [createdAt, id]
+ *           default: createdAt
+ *       - in: query
+ *         name: order
+ *         schema:
+ *           type: string
+ *           enum: [asc, desc]
+ *           default: desc
  *     responses:
  *       200:
- *         description: Bookings retrieved successfully
+ *         description: Paginated bookings retrieved successfully
+ *       400:
+ *         description: Invalid pagination or sorting parameters
  *       500:
  *         description: Unable to retrieve bookings
  */
-router.get("/bookings", getAllBookings);
+
+router.get("/bookings", getPaginatedBookingsController);
 
 /**
  * @swagger
